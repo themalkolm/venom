@@ -15,7 +15,7 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 		v = viperMaybe[0]
 	}
 
-	replaceMap := make([]string, 0)
+	replaceMap := make([]string, 0, 2 * flags.NFlag())
 	flags.VisitAll(func(f *pflag.Flag) {
 		name := strings.ToUpper(f.Name)
 		replaceMap = append(replaceMap, name)
