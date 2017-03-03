@@ -1,4 +1,4 @@
-# venom
+# venom [![Build Status](https://travis-ci.org/themalkolm/venom.svg?branch=master)](https://travis-ci.org/themalkolm/venom)
 
 Add some venom to make [cobra](https://github.com/spf13/cobra) and [viper](https://github.com/spf13/viper)
 even more dangerous!
