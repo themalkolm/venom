@@ -22,6 +22,7 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 		replaceMap = append(replaceMap, strings.Replace(name, "-", "_", -1))
 	})
 	v.SetEnvKeyReplacer(strings.NewReplacer(replaceMap...))
+	v.AutomaticEnv()
 }
 
 func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper) error {
@@ -38,9 +39,6 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 
 	// Set env prefix
 	v.SetEnvPrefix(strings.ToUpper(name))
-
-	// Set automatic env
-	v.AutomaticEnv()
 
 	// Patch automatic env
 	AutomaticEnv(flags, v)
