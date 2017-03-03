@@ -1,8 +1,8 @@
 package venom
 
 import (
-	"strings"
 	"sort"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -31,7 +31,7 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 	// foo being triggered when foo-bar is given to string replacer.
 	sort.Sort(sort.Reverse(sort.StringSlice(keys)))
 
-	values := make([]string, 0, 2 * len(keys))
+	values := make([]string, 0, 2*len(keys))
 	for _, k := range keys {
 		values = append(values, k)
 		values = append(values, replaceMap[k])
