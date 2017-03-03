@@ -11,17 +11,23 @@ import (
 	"github.com/themalkolm/venom"
 )
 
+type Config struct {
+	Foo    string `mapstructure:"foo"`
+	FooBar string `mapstructure:"foo-bar"`
+}
+
 var RootCmd = &cobra.Command{
 	Use:          "example",
 	Short:        "Do example things.",
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		b, err := yaml.Marshal(viper.AllSettings())
+		var cfg Config
+		err := viper.Unmarshal(&cfg)
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%+v", string(b))
-		return nil
+
+		return runE(&cfg)
 	},
 }
 
@@ -33,4 +39,13 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func runE(cfg *Config) error {
+	b, err := yaml.Marshal(&cfg)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%+v", string(b))
+	return nil
 }
