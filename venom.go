@@ -2,6 +2,7 @@ package venom
 
 import (
 	"strings"
+	"sort"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -15,13 +16,28 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 		v = viperMaybe[0]
 	}
 
-	replaceMap := make([]string, 0, 2 * flags.NFlag())
+	replaceMap := make(map[string]string, flags.NFlag())
 	flags.VisitAll(func(f *pflag.Flag) {
 		name := strings.ToUpper(f.Name)
-		replaceMap = append(replaceMap, name)
-		replaceMap = append(replaceMap, strings.Replace(name, "-", "_", -1))
+		replaceMap[name] = strings.Replace(name, "-", "_", -1)
 	})
-	v.SetEnvKeyReplacer(strings.NewReplacer(replaceMap...))
+
+	keys := make([]string, 0, len(replaceMap))
+	for k := range replaceMap {
+		keys = append(keys, k)
+	}
+
+	// Reverse sort keys, this is to make sure foo-bar comes before foo. This is to prevent
+	// foo being triggered when foo-bar is given to string replacer.
+	sort.Sort(sort.Reverse(sort.StringSlice(keys)))
+
+	values := make([]string, 0, 2 * len(keys))
+	for _, k := range keys {
+		values = append(values, k)
+		values = append(values, replaceMap[k])
+	}
+
+	v.SetEnvKeyReplacer(strings.NewReplacer(values...))
 	v.AutomaticEnv()
 }
 
