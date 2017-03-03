@@ -8,7 +8,7 @@ import (
 )
 
 // Teach viper to search FOO_BAR for every --foo-bar key instead of
-// the deafault FOO-BAR.
+// the default FOO-BAR.
 func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
