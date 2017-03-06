@@ -1,0 +1,10 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+set ::env(EXAMPLE_FOO) 42
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "foo: \"42\""
+}
