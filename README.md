@@ -19,20 +19,6 @@ define how exactly you want to configure the application. It is even OK to mix h
 * [environment variables](https://github.com/spf13/viper#working-with-flags)
 * [...](https://github.com/spf13/viper#what-is-viper)
 
-## Gotchas
-
-This is very nice to allow you to configure how you want. Interesting that this makes it hard to make sure that every
-developer is using the same configuration and they are easily translated between each other. It is matter of time when
-you have the following questions to answer:
-
-* How to define environment variables in a config file?
-* How to pass a configuration file content as an env variable?
-
-There is no "right" and easy way to solve this problem. The more flexible is configuration - the more complex setups you
-get. Yep, here `venom` goes long way to break the very thing 12-factor apps is about.
-
-✌.|•͡˘‿•͡˘|.✌
-
 ## Priority
 
 If you use `TwelveFactorCmd` then here is the priority of resolution (highest to lowest):
