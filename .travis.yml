@@ -3,4 +3,5 @@ language: go
 go:
   - 1.8
 script:
-  - cd _example && make
+  - make
+  - make test
