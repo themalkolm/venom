@@ -49,7 +49,7 @@ func init() {
 	//
 	// Enable 12-factor application so magic happens
 	//
-	err := venom.TwelveFactor("example", RootCmd.PersistentFlags())
+	err := venom.TwelveFactorCmd(RootCmd, RootCmd.PersistentFlags())
 	if err != nil {
 		log.Fatal(err)
 	}
