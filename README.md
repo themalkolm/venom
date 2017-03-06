@@ -32,7 +32,7 @@ There is no "right" and easy way to solve this problem. The more flexible is con
 
 If you use `TwelveFactorCmd` then here is the priority of resolution (highest to lowest):
 
-* `$ example --foo <value>`
-* `$ example -e EXAMPLE_FOO <value>`
-* `$ example --env-file example.env # (assuming it has EXAMPLE_FOO=<value> line)`
-* `$ EXAMPLE_FOO=<value> example`
+* `$ example --foo 42`
+* `$ example -e EXAMPLE_FOO 42`
+* `$ example --env-file example.env # (assuming it has EXAMPLE_FOO=42 line)`
+* `$ EXAMPLE_FOO=42 example`
