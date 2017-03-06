@@ -13,4 +13,5 @@ The twist is that it doesn't *require* you to store all configuration in the env
 
 * cli flags
 * config file
+* config dir (with all files)
 * environment variables
