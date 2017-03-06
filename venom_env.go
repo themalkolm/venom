@@ -71,20 +71,22 @@ func initEnvFlags(flags *pflag.FlagSet) error {
 //
 func patchViper(stringSliceKeys []string, v *viper.Viper) {
 	for _, k := range stringSliceKeys {
-		if v.Get(k) != nil {
-			value := v.GetString(k)
-			value = strings.TrimSpace(value)
-			if value == "" {
-				v.Set(k, []string{})
-				continue
-			}
-
-			parts := strings.Split(value, ",")
-			for i, p := range parts {
-				parts[i] = strings.TrimSpace(p)
-			}
-			v.Set(k, parts)
+		if v.Get(k) == nil {
+			continue // skip nil values
 		}
+
+		value := v.GetString(k)
+		value = strings.TrimSpace(value)
+		if value == "" {
+			v.Set(k, []string{})
+			continue // skip empty values
+		}
+
+		parts := strings.Split(value, ",")
+		for i, p := range parts {
+			parts[i] = strings.TrimSpace(p)
+		}
+		v.Set(k, parts)
 	}
 }
 
