@@ -22,9 +22,13 @@ define how exactly you want to configure the application. It is even OK to mix h
 
 If you use `TwelveFactorCmd` then here is the priority of resolution (highest to lowest):
 
-1. `$ example --foo 42`
-2. `$ example -e EXAMPLE_FOO 42`
-3. `$ example --env-file example.env # (assuming it has EXAMPLE_FOO=42 line)`
-4. `$ EXAMPLE_ENV=EXAMPLE_FOO=42 ./bin/example`
-5. `$ EXAMPLE_ENV_FILE=example.env ./bin/example`
-6. `$ EXAMPLE_FOO=42 example`
+* `$ example --foo 42`
+* env as flags
+ * `$ example -e EXAMPLE_FOO 42`
+ * `$ example --env-file example.env # (assuming it has EXAMPLE_FOO=42 line)`
+* env as env
+ * `$ EXAMPLE_ENV=EXAMPLE_FOO=42 ./bin/example`
+ * `$ EXAMPLE_ENV_FILE=example.env ./bin/example`
+* `$ EXAMPLE_FOO=42 example`
+
+You probably should not use env as env trick as it is very confusing for any user.
