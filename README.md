@@ -11,7 +11,6 @@ the [config](https://12factor.net/config) one i.e. it will allow you to store yo
 
 The twist is that it doesn't *require* you to store all configuration in the environment variables. It is up to you to define how exactly you want to configure the application. It is even OK to mix however you want:
 
-* cli flags
-* config file
-* config dir (with all files)
-* environment variables
+* [cli flags](https://github.com/spf13/cobra#working-with-flags)
+* [config file/dir](https://github.com/spf13/viper#reading-config-files)
+* [environment variables](https://github.com/spf13/viper#working-with-flags)
