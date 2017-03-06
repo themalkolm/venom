@@ -24,6 +24,6 @@ using the same configuraiton and they are easily translated between each other. 
 * How to define environment variables in a config file?
 * How to pass a configuration file content as an env variable?
 
-There is no "right" and easy way to solve this problem. The more flexible is configuration - the more complex setups you get. Yep, here `venom` goes long way to break the very thing 12-factor apps are about.
+There is no "right" and easy way to solve this problem. The more flexible is configuration - the more complex setups you get. Yep, here `venom` goes long way to break the very thing 12-factor apps is about.
 
 ✌.|•͡˘‿•͡˘|.✌
