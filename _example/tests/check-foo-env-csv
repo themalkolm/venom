@@ -1,0 +1,18 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+set ::env(EXAMPLE_FOO) "42,43"
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "foo: 42,43"
+}
+
+set ::env(EXAMPLE_FOO) "apple,orange"
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "foo: apple,orange"
+}
+
