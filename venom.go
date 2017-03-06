@@ -41,6 +41,7 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 	v.AutomaticEnv()
 }
 
+// Configure viper to automatically check environment variables for all flags in the provided flags.
 func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper) error {
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
