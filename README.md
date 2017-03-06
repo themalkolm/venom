@@ -25,4 +25,6 @@ If you use `TwelveFactorCmd` then here is the priority of resolution (highest to
 * `$ example --foo 42`
 * `$ example -e EXAMPLE_FOO 42`
 * `$ example --env-file example.env # (assuming it has EXAMPLE_FOO=42 line)`
+* `$ EXAMPLE_ENV=EXAMPLE_FOO=42 ./bin/example`
+* `$ EXAMPLE_ENV_FILE=example.env ./bin/example`
 * `$ EXAMPLE_FOO=42 example`
