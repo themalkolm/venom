@@ -27,3 +27,12 @@ using the same configuraiton and they are easily translated between each other. 
 There is no "right" and easy way to solve this problem. The more flexible is configuration - the more complex setups you get. Yep, here `venom` goes long way to break the very thing 12-factor apps is about.
 
 ✌.|•͡˘‿•͡˘|.✌
+
+## Priority
+
+If you use `TwelveFactorCmd` then here is the priority of resolution (highest to lowest):
+
+* `$ example --foo <value>`
+* `$ example -e EXAMPLE_FOO <value>`
+* `$ example --env-file example.env # (assuming it has EXAMPLE_FOO=<value> line)`
+* `$ EXAMPLE_FOO=<value> example`
