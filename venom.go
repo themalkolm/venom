@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+func sanitize(s string) string {
+	return strings.Replace(s, "-", "_", -1)
+}
+
 // Teach viper to search FOO_BAR for every --foo-bar key instead of
 // the default FOO-BAR.
 func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
@@ -19,7 +23,7 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 	replaceMap := make(map[string]string, flags.NFlag())
 	flags.VisitAll(func(f *pflag.Flag) {
 		name := strings.ToUpper(f.Name)
-		replaceMap[name] = strings.Replace(name, "-", "_", -1)
+		replaceMap[name] = sanitize(name)
 	})
 
 	keys := make([]string, 0, len(replaceMap))
