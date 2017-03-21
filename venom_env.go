@@ -141,7 +141,7 @@ func readEnv(viperMaybe ...*viper.Viper) error {
 //
 // Note that we add some extra flags & alter PreRunE value.
 //
-func TwelveFactorCmd(cmd *cobra.Command, flags *pflag.FlagSet, viperMaybe ...*viper.Viper) error {
+func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, viperMaybe ...*viper.Viper) error {
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
 		v = viperMaybe[0]
@@ -152,12 +152,15 @@ func TwelveFactorCmd(cmd *cobra.Command, flags *pflag.FlagSet, viperMaybe ...*vi
 		return err
 	}
 
-	parts := strings.SplitN(cmd.Use, " ", 2)
-	if len(parts) == 0 {
-		return fmt.Errorf("Please set cmd.Use one-liner so name could be determined: %s", cmd.Use)
+	if name == "" {
+		parts := strings.SplitN(name, " ", 2)
+		if len(parts) == 0 {
+			return fmt.Errorf("Please either provide name or set cmd.Use one-liner so name could be determined: %s", cmd.Use)
+		}
+		name = parts[0]
 	}
 
-	err = TwelveFactor(parts[0], flags, v)
+	err = TwelveFactor(name, flags, v)
 	if err != nil {
 		return err
 	}
