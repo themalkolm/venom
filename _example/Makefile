@@ -27,3 +27,4 @@ test: $(TESTS)
 
 clean:
 	rm -rf bin pkg
+	rm -rf vendor/src/github.com/themalkolm/venom
