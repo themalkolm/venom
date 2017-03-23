@@ -37,14 +37,21 @@ var RootCmd = &cobra.Command{
 type Config struct {
 	Foo    string `mapstructure:"foo"`
 	FooBar string `mapstructure:"foo-bar"`
+	FooMoo int    `mapstructure:"foo-moo" pflag:"foo-moo,4,Some mooness must be set"`
 }
 
 func init() {
 	//
-	// You need to define flags as usual.
+	// You either define flags manually ...
 	//
 	RootCmd.PersistentFlags().String("foo", "", "Some foonees must be set")
 	RootCmd.PersistentFlags().String("foo-bar", "", "Some barness must be set")
+
+	//
+	// ... or let venom to do it for you.
+	//
+	flags := venom.DefineFlags(Config{})
+	RootCmd.PersistentFlags().AddFlagSet(flags)
 
 	//
 	// Enable 12-factor application so magic happens
