@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strconv"
 	"strings"
 
 	"github.com/spf13/pflag"
@@ -82,91 +81,39 @@ func NewFlags(config interface{}) (*pflag.FlagSet, error) {
 			continue
 		}
 
-		name, zero, usage := parseTag(tag)
+		name, shorthand, usage := parseTag(tag)
 
 		val := v.Field(i)
 		typ := val.Type()
 		switch typ.Kind() {
 		case reflect.Bool:
-			if value, err := strconv.ParseBool(zero); err != nil {
-				return nil, err
-			} else {
-				flags.Bool(name, value, usage)
-			}
+			flags.BoolP(name, shorthand, false, usage)
 		case reflect.Int:
-			if value, err := strconv.ParseInt(zero, 10, 64); err != nil {
-				return nil, err
-			} else {
-				flags.Int(name, int(value), usage)
-			}
+			flags.IntP(name, shorthand, 0, usage)
 		case reflect.Int8:
-			if value, err := strconv.ParseInt(zero, 10, 8); err != nil {
-				return nil, err
-			} else {
-				flags.Int8(name, int8(value), usage)
-			}
+			flags.Int8P(name, shorthand, 0, usage)
 		case reflect.Int16:
-			if value, err := strconv.ParseInt(zero, 10, 16); err != nil {
-				return nil, err
-			} else {
-				flags.Int32(name, int32(value), usage) // Not a typo, pflags doesn't have Int16
-			}
+			flags.Int32P(name, shorthand, 0, usage) // Not a typo, pflags doesn't have Int16
 		case reflect.Int32:
-			if value, err := strconv.ParseInt(zero, 10, 32); err != nil {
-				return nil, err
-			} else {
-				flags.Int32(name, int32(value), usage)
-			}
+			flags.Int32P(name, shorthand, 0, usage)
 		case reflect.Int64:
-			if value, err := strconv.ParseInt(zero, 10, 64); err != nil {
-				return nil, err
-			} else {
-				flags.Int64(name, int64(value), usage)
-			}
+			flags.Int64P(name, shorthand, 0, usage)
 		case reflect.Uint:
-			if value, err := strconv.ParseUint(zero, 10, 64); err != nil {
-				return nil, err
-			} else {
-				flags.Uint(name, uint(value), usage)
-			}
+			flags.UintP(name, shorthand, 0, usage)
 		case reflect.Uint8:
-			if value, err := strconv.ParseUint(zero, 10, 8); err != nil {
-				return nil, err
-			} else {
-				flags.Uint8(name, uint8(value), usage)
-			}
+			flags.Uint8P(name, shorthand, 0, usage)
 		case reflect.Uint16:
-			if value, err := strconv.ParseUint(zero, 10, 16); err != nil {
-				return nil, err
-			} else {
-				flags.Uint16(name, uint16(value), usage)
-			}
+			flags.Uint16P(name, shorthand, 0, usage)
 		case reflect.Uint32:
-			if value, err := strconv.ParseUint(zero, 10, 32); err != nil {
-				return nil, err
-			} else {
-				flags.Uint32(name, uint32(value), usage)
-			}
+			flags.Uint32P(name, shorthand, 0, usage)
 		case reflect.Uint64:
-			if value, err := strconv.ParseUint(zero, 10, 64); err != nil {
-				return nil, err
-			} else {
-				flags.Uint64(name, uint64(value), usage)
-			}
+			flags.Uint64P(name, shorthand, 0, usage)
 		case reflect.Float32:
-			if value, err := strconv.ParseFloat(zero, 32); err != nil {
-				return nil, err
-			} else {
-				flags.Float32(name, float32(value), usage)
-			}
+			flags.Float32P(name, shorthand, 0, usage)
 		case reflect.Float64:
-			if value, err := strconv.ParseFloat(zero, 64); err != nil {
-				return nil, err
-			} else {
-				flags.Float64(name, float64(value), usage)
-			}
+			flags.Float64P(name, shorthand, 0, usage)
 		case reflect.String:
-			flags.String(name, zero, usage)
+			flags.StringP(name, shorthand, "", usage)
 		default:
 			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, typ)
 		}

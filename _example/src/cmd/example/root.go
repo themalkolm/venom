@@ -37,7 +37,7 @@ var RootCmd = &cobra.Command{
 type Config struct {
 	Foo    string `mapstructure:"foo"`
 	FooBar string `mapstructure:"foo-bar"`
-	FooMoo int    `mapstructure:"foo-moo" pflag:"foo-moo,4,Some mooness must be set"`
+	FooMoo int    `mapstructure:"foo-moo" pflag:"foo-moo,m,Some mooness must be set"`
 }
 
 func init() {
