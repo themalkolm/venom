@@ -12,12 +12,33 @@ import (
 
 func parseTag(tag string) (string, string, string) {
 	parts := strings.SplitN(tag, ",", 3)
+
+	// flag: bar, b, Some barness -> flag: bar,b,Some barness
+	for i, p := range parts {
+		parts[i] = strings.TrimSpace(p)
+	}
+
 	switch len(parts) {
 	case 1:
+		// flag: b
+		if len(parts[0]) == 1 {
+			return "", parts[0], ""
+		}
+		// flag: bar
 		return parts[0], "", ""
 	case 2:
+		// flag: b,Some barness
+		if len(parts[0]) == 1 {
+			return "", parts[0], parts[1]
+		}
+		// flag: bar,b
+		if len(parts[1]) == 1 {
+			return parts[0], parts[1], ""
+		}
+		// flag: bar,Some barness
 		return parts[0], "", parts[1]
 	case 3:
+		// flag: bar,b,Some barness
 		return parts[0], parts[1], parts[2]
 	default:
 		return "", "", ""
