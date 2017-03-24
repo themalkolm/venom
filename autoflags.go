@@ -53,6 +53,27 @@ func DefineFlags(config interface{}) *pflag.FlagSet {
 }
 
 func NewFlags(config interface{}) (*pflag.FlagSet, error) {
+	a := flagsFactory{
+		tags: []string{"flag", "pflag"},
+	}
+	return a.createFlags(config)
+}
+
+type flagsFactory struct {
+	tags []string
+}
+
+func (a flagsFactory) lookupTag(field reflect.StructField) (string, bool) {
+	for _, name := range a.tags {
+		v, ok := field.Tag.Lookup(name)
+		if ok {
+			return v, true
+		}
+	}
+	return "", false
+}
+
+func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
 	var flags pflag.FlagSet
 
 	//
@@ -76,8 +97,8 @@ func NewFlags(config interface{}) (*pflag.FlagSet, error) {
 	for i := 0; i < v.Type().NumField(); i++ {
 		field := v.Type().Field(i)
 
-		tag := field.Tag.Get("pflag")
-		if tag == "" {
+		tag, ok := a.lookupTag(field)
+		if !ok {
 			continue
 		}
 
