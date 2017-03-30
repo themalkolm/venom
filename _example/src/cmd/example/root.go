@@ -65,7 +65,7 @@ func init() {
 func runE(cfg *Config) error {
 	//
 	// Here we simply dump passed config object. This has nothing to do
-	// with 12-factor, just make it easy to play with.
+	// with 12-factor, just to make it easy to play with.
 	//
 	b, err := yaml.Marshal(&cfg)
 	if err != nil {
