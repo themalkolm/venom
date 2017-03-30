@@ -104,9 +104,7 @@ func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
 
 		name, shorthand, usage := parseTag(tag)
 
-		val := v.Field(i)
-		typ := val.Type()
-		switch typ.Kind() {
+		switch fieldType.Type.Kind() {
 		case reflect.Bool:
 			flags.BoolP(name, shorthand, false, usage)
 		case reflect.Int:
@@ -136,7 +134,7 @@ func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
 		case reflect.String:
 			flags.StringP(name, shorthand, "", usage)
 		default:
-			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, typ)
+			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType.Type)
 		}
 	}
 
