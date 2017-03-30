@@ -1,0 +1,15 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "goo: \"\""
+}
+
+spawn ./bin/example --goo banana
+expect {
+    default { puts "FAIL"; exit 1 }
+    "goo: banana"
+}
