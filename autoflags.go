@@ -73,13 +73,13 @@ func (a flagsFactory) lookupTag(field reflect.StructField) (string, bool) {
 	return "", false
 }
 
-func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
+func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) {
 	var flags pflag.FlagSet
 
 	//
 	// Remove one level of indirection.
 	//
-	v := reflect.ValueOf(config)
+	v := reflect.ValueOf(defaults)
 	if v.Kind() == reflect.Ptr {
 		v = reflect.Indirect(v)
 	}
@@ -96,6 +96,7 @@ func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
 	//
 	for i := 0; i < v.Type().NumField(); i++ {
 		fieldType := v.Type().Field(i)
+		fieldValue := v.Field(i)
 
 		tag, ok := a.lookupTag(fieldType)
 		if !ok {
@@ -106,33 +107,47 @@ func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
 
 		switch fieldType.Type.Kind() {
 		case reflect.Bool:
-			flags.BoolP(name, shorthand, false, usage)
+			value := bool(fieldValue.Bool())
+			flags.BoolP(name, shorthand, value, usage)
 		case reflect.Int:
-			flags.IntP(name, shorthand, 0, usage)
+			value := int(fieldValue.Int())
+			flags.IntP(name, shorthand, value, usage)
 		case reflect.Int8:
-			flags.Int8P(name, shorthand, 0, usage)
+			value := int8(fieldValue.Int())
+			flags.Int8P(name, shorthand, value, usage)
 		case reflect.Int16:
-			flags.Int32P(name, shorthand, 0, usage) // Not a typo, pflags doesn't have Int16
+			value := int32(fieldValue.Int())
+			flags.Int32P(name, shorthand, value, usage) // Not a typo, pflags doesn't have Int16
 		case reflect.Int32:
-			flags.Int32P(name, shorthand, 0, usage)
+			value := int32(fieldValue.Int())
+			flags.Int32P(name, shorthand, value, usage)
 		case reflect.Int64:
-			flags.Int64P(name, shorthand, 0, usage)
+			value := int64(fieldValue.Int())
+			flags.Int64P(name, shorthand, value, usage)
 		case reflect.Uint:
-			flags.UintP(name, shorthand, 0, usage)
+			value := uint(fieldValue.Uint())
+			flags.UintP(name, shorthand, value, usage)
 		case reflect.Uint8:
-			flags.Uint8P(name, shorthand, 0, usage)
+			value := uint8(fieldValue.Uint())
+			flags.Uint8P(name, shorthand, value, usage)
 		case reflect.Uint16:
-			flags.Uint16P(name, shorthand, 0, usage)
+			value := uint16(fieldValue.Uint())
+			flags.Uint16P(name, shorthand, value, usage)
 		case reflect.Uint32:
-			flags.Uint32P(name, shorthand, 0, usage)
+			value := uint32(fieldValue.Uint())
+			flags.Uint32P(name, shorthand, value, usage)
 		case reflect.Uint64:
-			flags.Uint64P(name, shorthand, 0, usage)
+			value := uint64(fieldValue.Uint())
+			flags.Uint64P(name, shorthand, value, usage)
 		case reflect.Float32:
-			flags.Float32P(name, shorthand, 0, usage)
+			value := float32(fieldValue.Float())
+			flags.Float32P(name, shorthand, value, usage)
 		case reflect.Float64:
-			flags.Float64P(name, shorthand, 0, usage)
+			value := float64(fieldValue.Float())
+			flags.Float64P(name, shorthand, value, usage)
 		case reflect.String:
-			flags.StringP(name, shorthand, "", usage)
+			value := string(fieldValue.String())
+			flags.StringP(name, shorthand, value, usage)
 		default:
 			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType.Type)
 		}
