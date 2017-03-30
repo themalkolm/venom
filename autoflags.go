@@ -96,7 +96,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 	}
 
 	//
-	// For every struct field create a flag.
+	// For every tagged struct field create a flag.
 	//
 	for i := 0; i < v.Type().NumField(); i++ {
 		structField := v.Type().Field(i)
