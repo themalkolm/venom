@@ -144,7 +144,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 		mapTag, ok := structField.Tag.Lookup("mapstructure")
 		if ok {
 			mapName, ok := parseMapstructureTag(mapTag)
-			if ok && !strings.HasPrefix(tag, mapName+",") {
+			if ok && !(tag == mapName || strings.HasPrefix(tag, mapName+",")) {
 				return nil, fmt.Errorf(`Both "mapstructure" and "flag" tags must have equal names but are different for field: %s`, structField.Name)
 				continue
 			}
