@@ -1,7 +1,7 @@
 all: build
 
 fmt:
-	@gofmt -l -s -w -- *.go
+	@gofmt -l -s -w -- *.go _example/src/cmd/example/*.go
 
 build: fmt
 	$(MAKE) -C _example build
