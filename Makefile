@@ -6,7 +6,7 @@ fmt:
 build: fmt
 	$(MAKE) -C _example build
 
-test:
+test: build
 	$(MAKE) -C _example test
 
 clean:
