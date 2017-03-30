@@ -48,10 +48,32 @@ This will allow venom to find this tag and parse long flag name, short flag name
 define it as a comma separated triplet. It has some logic to deduce what you meant in case you have use only one or two
 comma separated values.
 
-To define flags you simply run `DefineFlags`. Note that for flags only the type of the passed object matters. The struct
-field values are ignored:
+To define flags you simply run `DefineFlags`. Note that in this case all flags will have default values set to zero values
+for their types i.e. 0 for int, "" for string, false for bool etc.:
 
 ```
 flags := venom.DefineFlags(Config{})
+RootCmd.PersistentFlags().AddFlagSet(flags)
+```
+
+## Defaults
+
+You can not only define flags by a special struct but also the default values for these flags. Keep in mind that this
+works for simple cases (int, unit, string, bool) and probably fails for the rest. It implements only a very minimal
+subset of what pflags/cobra/viper are capable of - fix what you miss:
+
+```
+type Config struct {
+	FooMoo int `flag:"foo-moo,m,Some mooness must be set"`
+}
+```
+
+To define default values simply override zero values:
+
+```
+defaults := Config {
+    FooMoo: 42,
+}
+flags := venom.DefineFlags(defaults)
 RootCmd.PersistentFlags().AddFlagSet(flags)
 ```
