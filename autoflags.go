@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/pflag"
 )
 
+const (
+	SquashFlagsTag = "++"
+)
+
 func parseTag(tag string) (string, string, string) {
 	parts := strings.SplitN(tag, ",", 3)
 
@@ -101,6 +105,22 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 
 		tag, ok := a.lookupTag(structField.Tag)
 		if !ok {
+			continue
+		}
+
+		//
+		// This means we want to squash all flags from the inner structure so they appear as is they are defined
+		// in the outer structure.
+		//
+		if tag == SquashFlagsTag {
+			if fieldType.Kind() != reflect.Struct {
+				return nil, fmt.Errorf(`flag:"%s" is supported only for inner structs but is set on: %s`, SquashFlagsTag, fieldType)
+			}
+			innerFlags, err := a.createFlags(fieldValue.Interface())
+			if err != nil {
+				return nil, err
+			}
+			flags.AddFlagSet(innerFlags)
 			continue
 		}
 

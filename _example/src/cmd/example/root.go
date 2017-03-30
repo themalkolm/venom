@@ -34,7 +34,13 @@ var RootCmd = &cobra.Command{
 	},
 }
 
+type Inner struct {
+	Goo string `mapstructure:"goo" pflag:"goo,,Some gooness must be set"`
+}
+
 type Config struct {
+	Inner `mapstructure:",squash" pflag:"++"`
+
 	Foo    string `mapstructure:"foo"`
 	FooBar string `mapstructure:"foo-bar"`
 	FooMoo int    `mapstructure:"foo-moo" pflag:"foo-moo,m,Some mooness must be set"`
