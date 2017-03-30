@@ -13,6 +13,20 @@ const (
 	SquashFlagsTag = "++"
 )
 
+// Parse name for mapstructure tags i.e. fetch banana from:
+//
+// type Foo struct {
+//     foo int `mapstructure:"banana"`
+// }
+//
+func parseMapstructureTag(tag string) (string, bool) {
+	parts := strings.SplitN(tag, ",", 2)
+	if len(parts) == 0 {
+		return "", false
+	}
+	return parts[0], true
+}
+
 func parseTag(tag string) (string, string, string) {
 	parts := strings.SplitN(tag, ",", 3)
 
@@ -122,6 +136,18 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			}
 			flags.AddFlagSet(innerFlags)
 			continue
+		}
+
+		//
+		// In case we have mapstructure defined it must have exactly the same name as flag has.
+		//
+		mapTag, ok := structField.Tag.Lookup("mapstructure")
+		if ok {
+			mapName, ok := parseMapstructureTag(mapTag)
+			if ok && !strings.HasPrefix(tag, mapName+",") {
+				return nil, fmt.Errorf(`Both "mapstructure" and "flag" tags must have equal names but are different for field: %s`, structField.Name)
+				continue
+			}
 		}
 
 		err := addFlagForTag(&flags, tag, fieldValue, fieldType)
