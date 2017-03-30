@@ -63,9 +63,9 @@ type flagsFactory struct {
 	tags []string
 }
 
-func (a flagsFactory) lookupTag(field reflect.StructField) (string, bool) {
+func (a flagsFactory) lookupTag(tag reflect.StructTag) (string, bool) {
 	for _, name := range a.tags {
-		v, ok := field.Tag.Lookup(name)
+		v, ok := tag.Lookup(name)
 		if ok {
 			return v, true
 		}
@@ -95,10 +95,11 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 	// For every struct field create a flag.
 	//
 	for i := 0; i < v.Type().NumField(); i++ {
-		fieldType := v.Type().Field(i).Type
+		structField := v.Type().Field(i)
+		fieldType := structField.Type
 		fieldValue := v.Field(i)
 
-		tag, ok := a.lookupTag(fieldType)
+		tag, ok := a.lookupTag(structField.Tag)
 		if !ok {
 			continue
 		}
