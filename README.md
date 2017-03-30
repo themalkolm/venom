@@ -32,3 +32,26 @@ If you use `TwelveFactorCmd` then here is the priority of resolution (highest to
 * `$ EXAMPLE_FOO=42 example`
 
 You probably should not use env as env trick as it is very confusing for any user.
+
+## Autoflags
+
+It is possible to ask venom to define flags for you. You need to provide a struct or pointer to struct that has
+special `flag` tag set e.g.
+
+```
+type Config struct {
+	FooMoo int `flag:"foo-moo,m,Some mooness must be set"`
+}
+```
+
+This will allow venom to find this tag and parse long flag name, short flag name and the description. It expect you to
+define it as a comma separated triplet. It has some logic to deduce what you meant in case you have use only one or two
+comma separated values.
+
+To define flags you simply run `DefineFlags`. Note that for flags only the type of the passed object matters. The struct
+field values are ignored:
+
+```
+flags := venom.DefineFlags(Config{})
+RootCmd.PersistentFlags().AddFlagSet(flags)
+```
