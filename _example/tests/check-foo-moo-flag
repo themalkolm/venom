@@ -5,7 +5,7 @@ set timeout 1
 spawn ./bin/example
 expect {
     default { puts "FAIL"; exit 1 }
-    "foomoo: 0"
+    "foomoo: 43"
 }
 
 spawn ./bin/example --foo-moo 42
