@@ -95,7 +95,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 	// For every struct field create a flag.
 	//
 	for i := 0; i < v.Type().NumField(); i++ {
-		fieldType := v.Type().Field(i)
+		fieldType := v.Type().Field(i).Type
 		fieldValue := v.Field(i)
 
 		tag, ok := a.lookupTag(fieldType)
@@ -105,7 +105,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 
 		name, shorthand, usage := parseTag(tag)
 
-		switch fieldType.Type.Kind() {
+		switch fieldType.Kind() {
 		case reflect.Bool:
 			value := bool(fieldValue.Bool())
 			flags.BoolP(name, shorthand, value, usage)
@@ -149,7 +149,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			value := string(fieldValue.String())
 			flags.StringP(name, shorthand, value, usage)
 		default:
-			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType.Type)
+			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
 		}
 	}
 
