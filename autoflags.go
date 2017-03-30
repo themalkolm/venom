@@ -104,55 +104,62 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			continue
 		}
 
-		name, shorthand, usage := parseTag(tag)
-
-		switch fieldType.Kind() {
-		case reflect.Bool:
-			value := bool(fieldValue.Bool())
-			flags.BoolP(name, shorthand, value, usage)
-		case reflect.Int:
-			value := int(fieldValue.Int())
-			flags.IntP(name, shorthand, value, usage)
-		case reflect.Int8:
-			value := int8(fieldValue.Int())
-			flags.Int8P(name, shorthand, value, usage)
-		case reflect.Int16:
-			value := int32(fieldValue.Int())
-			flags.Int32P(name, shorthand, value, usage) // Not a typo, pflags doesn't have Int16
-		case reflect.Int32:
-			value := int32(fieldValue.Int())
-			flags.Int32P(name, shorthand, value, usage)
-		case reflect.Int64:
-			value := int64(fieldValue.Int())
-			flags.Int64P(name, shorthand, value, usage)
-		case reflect.Uint:
-			value := uint(fieldValue.Uint())
-			flags.UintP(name, shorthand, value, usage)
-		case reflect.Uint8:
-			value := uint8(fieldValue.Uint())
-			flags.Uint8P(name, shorthand, value, usage)
-		case reflect.Uint16:
-			value := uint16(fieldValue.Uint())
-			flags.Uint16P(name, shorthand, value, usage)
-		case reflect.Uint32:
-			value := uint32(fieldValue.Uint())
-			flags.Uint32P(name, shorthand, value, usage)
-		case reflect.Uint64:
-			value := uint64(fieldValue.Uint())
-			flags.Uint64P(name, shorthand, value, usage)
-		case reflect.Float32:
-			value := float32(fieldValue.Float())
-			flags.Float32P(name, shorthand, value, usage)
-		case reflect.Float64:
-			value := float64(fieldValue.Float())
-			flags.Float64P(name, shorthand, value, usage)
-		case reflect.String:
-			value := string(fieldValue.String())
-			flags.StringP(name, shorthand, value, usage)
-		default:
-			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
+		err := addFlagForTag(&flags, tag, fieldValue, fieldType)
+		if err != nil {
+			return nil, err
 		}
 	}
 
 	return &flags, nil
+}
+
+func addFlagForTag(flags *pflag.FlagSet, tag string, fieldValue reflect.Value, fieldType reflect.Type) error {
+	name, shorthand, usage := parseTag(tag)
+	switch fieldType.Kind() {
+	case reflect.Bool:
+		value := bool(fieldValue.Bool())
+		flags.BoolP(name, shorthand, value, usage)
+	case reflect.Int:
+		value := int(fieldValue.Int())
+		flags.IntP(name, shorthand, value, usage)
+	case reflect.Int8:
+		value := int8(fieldValue.Int())
+		flags.Int8P(name, shorthand, value, usage)
+	case reflect.Int16:
+		value := int32(fieldValue.Int())
+		flags.Int32P(name, shorthand, value, usage) // Not a typo, pflags doesn't have Int16
+	case reflect.Int32:
+		value := int32(fieldValue.Int())
+		flags.Int32P(name, shorthand, value, usage)
+	case reflect.Int64:
+		value := int64(fieldValue.Int())
+		flags.Int64P(name, shorthand, value, usage)
+	case reflect.Uint:
+		value := uint(fieldValue.Uint())
+		flags.UintP(name, shorthand, value, usage)
+	case reflect.Uint8:
+		value := uint8(fieldValue.Uint())
+		flags.Uint8P(name, shorthand, value, usage)
+	case reflect.Uint16:
+		value := uint16(fieldValue.Uint())
+		flags.Uint16P(name, shorthand, value, usage)
+	case reflect.Uint32:
+		value := uint32(fieldValue.Uint())
+		flags.Uint32P(name, shorthand, value, usage)
+	case reflect.Uint64:
+		value := uint64(fieldValue.Uint())
+		flags.Uint64P(name, shorthand, value, usage)
+	case reflect.Float32:
+		value := float32(fieldValue.Float())
+		flags.Float32P(name, shorthand, value, usage)
+	case reflect.Float64:
+		value := float64(fieldValue.Float())
+		flags.Float64P(name, shorthand, value, usage)
+	case reflect.String:
+		value := string(fieldValue.String())
+		flags.StringP(name, shorthand, value, usage)
+	default:
+		return fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
+	}
+	return nil
 }
