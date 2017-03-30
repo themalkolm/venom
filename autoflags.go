@@ -95,9 +95,9 @@ func (a flagsFactory) createFlags(config interface{}) (*pflag.FlagSet, error) {
 	// For every struct field create a flag.
 	//
 	for i := 0; i < v.Type().NumField(); i++ {
-		field := v.Type().Field(i)
+		fieldType := v.Type().Field(i)
 
-		tag, ok := a.lookupTag(field)
+		tag, ok := a.lookupTag(fieldType)
 		if !ok {
 			continue
 		}
