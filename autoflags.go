@@ -157,6 +157,21 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 				}
 			}
 
+			// Check if innner struct implements HasFlags.
+			//
+			// I can't manage to get a pointer to inner struct here, it is not addressable and etc. Just as a workaround
+			// we make a temporary copy and get a pointer to it instead. Suboptimal but meh, config struct are supposed
+			// to be cheap to copy. Note that fieldValueCopy is a pointer.
+			//
+			fieldValueCopy := reflect.New(fieldType)
+			fieldValueCopy.Elem().Set(fieldValue)
+
+			if hasFlags, ok := fieldValueCopy.Interface().(HasFlags); ok {
+				innerFlags := hasFlags.Flags()
+				flags.AddFlagSet(innerFlags)
+				continue
+			}
+
 			// No overrides are provided, continue with recursive introspection
 			innerFlags, err := a.createFlags(fieldValue.Interface())
 			if err != nil {
