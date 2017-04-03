@@ -13,6 +13,14 @@ const (
 	SquashFlagsTag = "++"
 )
 
+//
+// Structures implementing this interface won't be introspected and this function will be called
+// instead.
+//
+type HasFlags interface {
+	Flags() *pflag.FlagSet
+}
+
 // Parse name for mapstructure tags i.e. fetch banana from:
 //
 // type Foo struct {
@@ -130,6 +138,26 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			if fieldType.Kind() != reflect.Struct {
 				return nil, fmt.Errorf(`flag:"%s" is supported only for inner structs but is set on: %s`, SquashFlagsTag, fieldType)
 			}
+
+			// Check if the struct implements HasFlags right away
+			if hasFlags, ok := fieldValue.Interface().(HasFlags); ok {
+				innerFlags := hasFlags.Flags()
+				flags.AddFlagSet(innerFlags)
+				continue
+			}
+
+			// Check if struct-ptr implements HasFlags
+			if fieldValue.CanAddr() {
+				fieldValueAddr := fieldValue.Addr()
+
+				if hasFlags, ok := fieldValueAddr.Interface().(HasFlags); ok {
+					innerFlags := hasFlags.Flags()
+					flags.AddFlagSet(innerFlags)
+					continue
+				}
+			}
+
+			// No overrides are provided, continue with recursive introspection
 			innerFlags, err := a.createFlags(fieldValue.Interface())
 			if err != nil {
 				return nil, err
