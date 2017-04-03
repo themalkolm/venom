@@ -157,7 +157,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 				}
 			}
 
-			// Check if innner struct implements HasFlags.
+			// Check if inner struct implements HasFlags.
 			//
 			// I can't manage to get a pointer to inner struct here, it is not addressable and etc. Just as a workaround
 			// we make a temporary copy and get a pointer to it instead. Suboptimal but meh, config struct are supposed
