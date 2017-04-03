@@ -153,7 +153,7 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 	}
 
 	if name == "" {
-		parts := strings.SplitN(name, " ", 2)
+		parts := strings.SplitN(cmd.Use, " ", 2)
 		if len(parts) == 0 {
 			return fmt.Errorf("Please either provide name or set cmd.Use one-liner so name could be determined: %s", cmd.Use)
 		}
