@@ -235,16 +235,27 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 		}
 
 		fi := parseTag(tag)
-		err := addFlagForTag(&flags, fi, fieldValue, fieldType)
+		fs, err := a.createFlag(fi, fieldValue, fieldType)
 		if err != nil {
 			return nil, err
 		}
+		flags.AddFlagSet(fs)
 	}
 
 	return &flags, nil
 }
 
-func addFlagForTag(flags *pflag.FlagSet, fi flagInfo, fieldValue reflect.Value, fieldType reflect.Type) error {
+//
+// Note that we pass both field value and field type as it is defined in the struct. I'm not 100% sure about this and
+// just playing safe here:
+//
+// Probably it is possible to get the value's type i.e. fieldValue.Type() and will be not equal to the fieldType as
+// defined in the struct. I think it is possible in case these types are convertible i.e. fieldValue.Type() is
+// convertible to fieldType.
+//
+func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldType reflect.Type) (*pflag.FlagSet, error) {
+	var flags pflag.FlagSet
+
 	name := fi.name
 	shorthand := fi.shorthand
 	usage := fi.usage
@@ -293,7 +304,7 @@ func addFlagForTag(flags *pflag.FlagSet, fi flagInfo, fieldValue reflect.Value, 
 		value := string(fieldValue.String())
 		flags.StringP(name, shorthand, value, usage)
 	default:
-		return fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
+		return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
 	}
-	return nil
+	return &flags, nil
 }
