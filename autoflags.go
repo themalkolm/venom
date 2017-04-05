@@ -218,7 +218,8 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			}
 		}
 
-		err := addFlagForTag(&flags, tag, fieldValue, fieldType)
+		fi := parseTag(tag)
+		err := addFlagForTag(&flags, fi, fieldValue, fieldType)
 		if err != nil {
 			return nil, err
 		}
@@ -227,9 +228,7 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 	return &flags, nil
 }
 
-func addFlagForTag(flags *pflag.FlagSet, tag string, fieldValue reflect.Value, fieldType reflect.Type) error {
-	fi := parseTag(tag)
-
+func addFlagForTag(flags *pflag.FlagSet, fi flagInfo, fieldValue reflect.Value, fieldType reflect.Type) error {
 	name := fi.name
 	shorthand := fi.shorthand
 	usage := fi.usage
