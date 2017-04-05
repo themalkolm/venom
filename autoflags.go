@@ -35,7 +35,13 @@ func parseMapstructureTag(tag string) (string, bool) {
 	return parts[0], true
 }
 
-func parseTag(tag string) (string, string, string) {
+type flagInfo struct {
+	name      string
+	shorthand string
+	usage     string
+}
+
+func parseTag(tag string) flagInfo {
 	parts := strings.SplitN(tag, ",", 3)
 
 	// flag: bar, b, Some barness -> flag: bar,b,Some barness
@@ -43,30 +49,49 @@ func parseTag(tag string) (string, string, string) {
 		parts[i] = strings.TrimSpace(p)
 	}
 
+	var f flagInfo
 	switch len(parts) {
 	case 1:
 		// flag: b
 		if len(parts[0]) == 1 {
-			return "", parts[0], ""
+			f.name = ""
+			f.shorthand = parts[0]
+			f.usage = ""
+			return f
 		}
 		// flag: bar
-		return parts[0], "", ""
+		f.name = parts[0]
+		f.shorthand = ""
+		f.usage = ""
+		return f
 	case 2:
 		// flag: b,Some barness
 		if len(parts[0]) == 1 {
-			return "", parts[0], parts[1]
+			f.name = ""
+			f.shorthand = parts[0]
+			f.usage = parts[1]
+			return f
 		}
 		// flag: bar,b
 		if len(parts[1]) == 1 {
-			return parts[0], parts[1], ""
+			f.name = parts[0]
+			f.shorthand = parts[1]
+			f.usage = ""
+			return f
 		}
 		// flag: bar,Some barness
-		return parts[0], "", parts[1]
+		f.name = parts[0]
+		f.shorthand = ""
+		f.usage = parts[1]
+		return f
 	case 3:
 		// flag: bar,b,Some barness
-		return parts[0], parts[1], parts[2]
+		f.name = parts[0]
+		f.shorthand = parts[1]
+		f.usage = parts[2]
+		return f
 	default:
-		return "", "", ""
+		return f
 	}
 }
 
@@ -203,7 +228,12 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 }
 
 func addFlagForTag(flags *pflag.FlagSet, tag string, fieldValue reflect.Value, fieldType reflect.Type) error {
-	name, shorthand, usage := parseTag(tag)
+	fi := parseTag(tag)
+
+	name := fi.name
+	shorthand := fi.shorthand
+	usage := fi.usage
+
 	switch fieldType.Kind() {
 	case reflect.Bool:
 		value := bool(fieldValue.Bool())
