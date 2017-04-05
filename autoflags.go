@@ -103,19 +103,19 @@ func parseTag(tag string) flagInfo {
 	}
 }
 
-func DefineFlags(config interface{}) *pflag.FlagSet {
-	flags, err := NewFlags(config)
+func DefineFlags(defaults interface{}) *pflag.FlagSet {
+	flags, err := NewFlags(defaults)
 	if err != nil {
 		panic(err)
 	}
 	return flags
 }
 
-func NewFlags(config interface{}) (*pflag.FlagSet, error) {
+func NewFlags(defaults interface{}) (*pflag.FlagSet, error) {
 	a := flagsFactory{
 		tags: []string{"flag", "pflag"},
 	}
-	return a.createFlags(config)
+	return a.createFlags(defaults)
 }
 
 type flagsFactory struct {
