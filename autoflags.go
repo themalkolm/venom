@@ -21,6 +21,7 @@ type HasFlags interface {
 	Flags() *pflag.FlagSet
 }
 
+//
 // Parse name for mapstructure tags i.e. fetch banana from:
 //
 // type Foo struct {
