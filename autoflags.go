@@ -42,6 +42,13 @@ type flagInfo struct {
 	usage     string
 }
 
+//
+// Parse flag tag so it later could be used to create cli flag:
+//
+// type Foo struct {
+//     foo int `flag:"foo,f,Do some fooness"`
+// }
+//
 func parseTag(tag string) flagInfo {
 	parts := strings.SplitN(tag, ",", 3)
 
