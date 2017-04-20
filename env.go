@@ -173,7 +173,7 @@ func preRun(viperMaybe ...*viper.Viper) error {
 	}
 
 	if cfg.PrintConfig {
-		enc := json.NewEncoder(os.Stderr)
+		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "    ")
 		err := enc.Encode(v.AllSettings())
 		if err != nil {
