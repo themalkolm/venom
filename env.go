@@ -193,10 +193,6 @@ func preRun(viperMaybe ...*viper.Viper) error {
 // Note that we add some extra flags & alter PreRunE value.
 //
 func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, viperMaybe ...*viper.Viper) error {
-	if flags == nil {
-		flags = pflag.NewFlagSet(name, pflag.ContinueOnError)
-	}
-
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
 		v = viperMaybe[0]
