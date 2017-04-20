@@ -52,7 +52,7 @@ func initEnvFlags(flags *pflag.FlagSet) error {
 	var errors []string
 	flags.VisitAll(func(f *pflag.Flag) {
 		if f.Name == "env" || f.Name == "env-file" {
-			errors = append(errors, fmt.Sprintf("Flag %s already exists!", f.Name))
+			errors = append(errors, fmt.Sprintf("Flag %s already defined!", f.Name))
 		}
 	})
 	if len(errors) > 0 {
