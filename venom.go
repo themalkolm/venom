@@ -12,8 +12,10 @@ func sanitize(s string) string {
 	return strings.Replace(s, "-", "_", -1)
 }
 
-// Teach viper to search FOO_BAR for every --foo-bar key instead of
-// the default FOO-BAR.
+//
+// Better version of viper.AutomaticEnv that searches FOO_BAR for every --foo-bar key in
+// addition to the default FOO-BAR.
+//
 func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
@@ -45,7 +47,11 @@ func AutomaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 	v.AutomaticEnv()
 }
 
-// Configure viper to automatically check environment variables for all flags in the provided flags.
+//
+// 12-factor setup for viper-backed application.
+//
+// Most important it will check environment variables for all flags in the provided flag set.
+//
 func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper) error {
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
