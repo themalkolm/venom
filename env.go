@@ -177,7 +177,9 @@ func preRun(viperMaybe ...*viper.Viper) error {
 		enc.SetIndent("", "    ")
 
 		all := v.AllSettings()
-		delete(all, "print-config")
+		for _, k := range []string{"print-config", "env", "env-file"} {
+			delete(all, k)
+		}
 
 		err := enc.Encode(all)
 		if err != nil {
