@@ -235,7 +235,7 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 				return err
 			}
 
-			return preRun()
+			return preRun(v)
 		}
 	} else {
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
@@ -243,7 +243,7 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 			if err != nil {
 				return err
 			}
-			return preRun()
+			return preRun(v)
 		}
 	}
 
