@@ -2,6 +2,7 @@ package venom
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -61,6 +62,29 @@ func initEnvFlags(flags *pflag.FlagSet) error {
 
 	flags.StringSliceP("env", "e", nil, "Set environment variables")
 	flags.StringSlice("env-file", nil, "Read in a file of environment variables")
+	return nil
+}
+
+//
+// Common configuration for every venom command. Makes it easier to debug and figure
+// out how exactly all env, flags etc. are merged.
+//
+type commonConfig struct {
+	PrintConfig bool `mapstructure:"print-config"`
+}
+
+func initCommonFlags(flags *pflag.FlagSet) error {
+	var errors []string
+	flags.VisitAll(func(f *pflag.Flag) {
+		if f.Name == "print-config" {
+			errors = append(errors, fmt.Sprintf("Flag %s already defined!", f.Name))
+		}
+	})
+	if len(errors) > 0 {
+		return fmt.Errorf("%d errors:\n%s", len(errors), strings.Join(errors, "\n"))
+	}
+
+	flags.Bool("print-config", false, "Print result configuraiton and exit.")
 	return nil
 }
 
@@ -136,6 +160,32 @@ func readEnv(viperMaybe ...*viper.Viper) error {
 	return nil
 }
 
+func preRun(viperMaybe ...*viper.Viper) error {
+	v := viper.GetViper()
+	if len(viperMaybe) != 0 {
+		v = viperMaybe[0]
+	}
+
+	var cfg commonConfig
+	err := v.Unmarshal(&cfg)
+	if err != nil {
+		return err
+	}
+
+	if cfg.PrintConfig {
+		enc := json.NewEncoder(os.Stderr)
+		enc.SetIndent("", "    ")
+		err := enc.Encode(v.AllSettings())
+		if err != nil {
+			return err
+		}
+
+		os.Exit(0)
+	}
+
+	return nil
+}
+
 //
 // Configure common flags and environment config considered (by me) as a good approach to _bootstrap_
 // any 12-factor app.
@@ -148,7 +198,12 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		v = viperMaybe[0]
 	}
 
-	err := initEnvFlags(flags)
+	err := initCommonFlags(flags)
+	if err != nil {
+		return err
+	}
+
+	err = initEnvFlags(flags)
 	if err != nil {
 		return err
 	}
@@ -174,11 +229,21 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 			if err != nil {
 				return err
 			}
-			return readEnv(v)
+
+			err = readEnv(v)
+			if err != nil {
+				return err
+			}
+
+			return preRun()
 		}
 	} else {
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-			return readEnv(v)
+			err := readEnv(v)
+			if err != nil {
+				return err
+			}
+			return preRun()
 		}
 	}
 
