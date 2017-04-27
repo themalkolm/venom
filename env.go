@@ -63,12 +63,7 @@ func initEnvFlags(flags *pflag.FlagSet) error {
 	return nil
 }
 
-func readEnv(viperMaybe ...*viper.Viper) error {
-	v := viper.GetViper()
-	if len(viperMaybe) != 0 {
-		v = viperMaybe[0]
-	}
-
+func readEnv(v *viper.Viper) error {
 	patchViper([]string{"env", "env-file"}, v)
 
 	var cfg envConfig

@@ -12,12 +12,7 @@ import (
 // Better version of viper.AutomaticEnv that searches FOO_BAR for every --foo-bar key in
 // addition to the default FOO-BAR.
 //
-func automaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
-	v := viper.GetViper()
-	if len(viperMaybe) != 0 {
-		v = viperMaybe[0]
-	}
-
+func automaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 	replaceMap := make(map[string]string, flags.NFlag())
 	flags.VisitAll(func(f *pflag.Flag) {
 		name := strings.ToUpper(f.Name)
@@ -48,12 +43,7 @@ func automaticEnv(flags *pflag.FlagSet, viperMaybe ...*viper.Viper) {
 //
 // https://github.com/spf13/viper/pull/319
 //
-func patchViper(stringSliceKeys []string, viperMaybe ...*viper.Viper) {
-	v := viper.GetViper()
-	if len(viperMaybe) != 0 {
-		v = viperMaybe[0]
-	}
-
+func patchViper(stringSliceKeys []string, v *viper.Viper) {
 	for _, k := range stringSliceKeys {
 		if v.Get(k) == nil {
 			continue // skip nil values

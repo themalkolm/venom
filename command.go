@@ -11,12 +11,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func preRun(viperMaybe ...*viper.Viper) error {
-	v := viper.GetViper()
-	if len(viperMaybe) != 0 {
-		v = viperMaybe[0]
-	}
-
+func preRun(v *viper.Viper) error {
 	var cfg debugConfig
 	err := v.Unmarshal(&cfg)
 	if err != nil {

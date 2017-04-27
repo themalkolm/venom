@@ -43,12 +43,7 @@ func initLogFlags(flags *pflag.FlagSet) error {
 	return nil
 }
 
-func readLog(viperMaybe ...*viper.Viper) error {
-	v := viper.GetViper()
-	if len(viperMaybe) != 0 {
-		v = viperMaybe[0]
-	}
-
+func readLog(v *viper.Viper) error {
 	var cfg logConfig
 	err := v.Unmarshal(&cfg)
 	if err != nil {
