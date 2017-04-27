@@ -22,6 +22,29 @@ type HasFlags interface {
 }
 
 //
+// Define new flags based on the provided defaults.
+//
+// It panics if something goes wrong.
+//
+func MustDefineFlags(defaults interface{}) *pflag.FlagSet {
+	flags, err := DefineFlags(defaults)
+	if err != nil {
+		panic(err)
+	}
+	return flags
+}
+
+//
+// Define new flags based on the provided defaults.
+//
+func DefineFlags(defaults interface{}) (*pflag.FlagSet, error) {
+	a := flagsFactory{
+		tags: []string{"flag", "pflag"},
+	}
+	return a.createFlags(defaults)
+}
+
+//
 // Parse name for mapstructure tags i.e. fetch banana from:
 //
 // type Foo struct {
@@ -101,29 +124,6 @@ func parseTag(tag string) flagInfo {
 	default:
 		return f
 	}
-}
-
-//
-// Define new flags based on the provided defaults.
-//
-// It panics if something goes wrong.
-//
-func MustDefineFlags(defaults interface{}) *pflag.FlagSet {
-	flags, err := DefineFlags(defaults)
-	if err != nil {
-		panic(err)
-	}
-	return flags
-}
-
-//
-// Define new flags based on the provided defaults.
-//
-func DefineFlags(defaults interface{}) (*pflag.FlagSet, error) {
-	a := flagsFactory{
-		tags: []string{"flag", "pflag"},
-	}
-	return a.createFlags(defaults)
 }
 
 type flagsFactory struct {
