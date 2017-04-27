@@ -55,21 +55,6 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		v = viperMaybe[0]
 	}
 
-	err := initDebugFlags(flags)
-	if err != nil {
-		return err
-	}
-
-	err = initEnvFlags(flags)
-	if err != nil {
-		return err
-	}
-
-	err = initLogFlags(flags)
-	if err != nil {
-		return err
-	}
-
 	if name == "" {
 		parts := strings.SplitN(cmd.Use, " ", 2)
 		if len(parts) == 0 {
@@ -78,7 +63,7 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		name = parts[0]
 	}
 
-	err = TwelveFactor(name, flags, v)
+	err := TwelveFactor(name, flags, v)
 	if err != nil {
 		return err
 	}

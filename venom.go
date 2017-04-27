@@ -22,8 +22,23 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 		v = viperMaybe[0]
 	}
 
+	err := initDebugFlags(flags)
+	if err != nil {
+		return err
+	}
+
+	err = initEnvFlags(flags)
+	if err != nil {
+		return err
+	}
+
+	err = initLogFlags(flags)
+	if err != nil {
+		return err
+	}
+
 	// Bind flags and configuration keys 1-to-1
-	err := v.BindPFlags(flags)
+	err = v.BindPFlags(flags)
 	if err != nil {
 		return err
 	}
