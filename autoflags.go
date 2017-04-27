@@ -109,7 +109,7 @@ func parseTag(tag string) flagInfo {
 // It panics if something goes wrong.
 //
 func MustDefineFlags(defaults interface{}) *pflag.FlagSet {
-	flags, err := NewFlags(defaults)
+	flags, err := DefineFlags(defaults)
 	if err != nil {
 		panic(err)
 	}
@@ -117,9 +117,9 @@ func MustDefineFlags(defaults interface{}) *pflag.FlagSet {
 }
 
 //
-// Create new flags based on the provided defaults.
+// Define new flags based on the provided defaults.
 //
-func NewFlags(defaults interface{}) (*pflag.FlagSet, error) {
+func DefineFlags(defaults interface{}) (*pflag.FlagSet, error) {
 	a := flagsFactory{
 		tags: []string{"flag", "pflag"},
 	}
