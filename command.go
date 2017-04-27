@@ -1,9 +1,7 @@
 package venom
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -12,13 +10,7 @@ import (
 )
 
 func preRun(v *viper.Viper) error {
-	var cfg debugConfig
-	err := v.Unmarshal(&cfg)
-	if err != nil {
-		return err
-	}
-
-	err = readEnv(v)
+	err := readEnv(v)
 	if err != nil {
 		return err
 	}
@@ -28,21 +20,10 @@ func preRun(v *viper.Viper) error {
 		return err
 	}
 
-	if cfg.PrintConfig {
-		enc := json.NewEncoder(os.Stdout)
-		enc.SetIndent("", "    ")
-
-		all := v.AllSettings()
-		for _, k := range []string{"print-config", "env", "env-file"} {
-			delete(all, k)
-		}
-
-		err := enc.Encode(all)
-		if err != nil {
-			return err
-		}
-
-		os.Exit(0)
+	// must be the last one
+	err = readDebug(v)
+	if err != nil {
+		return err
 	}
 
 	return nil
