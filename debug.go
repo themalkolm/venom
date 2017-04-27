@@ -8,14 +8,14 @@ import (
 )
 
 //
-// Common configuration for every venom command. Makes it easier to debug and figure
+// Debug configuration for every venom command. Makes it easier to debug and figure
 // out how exactly all env, flags etc. are merged.
 //
-type commonConfig struct {
+type debugConfig struct {
 	PrintConfig bool `mapstructure:"print-config"`
 }
 
-func initCommonFlags(flags *pflag.FlagSet) error {
+func initDebugFlags(flags *pflag.FlagSet) error {
 	var errors []string
 	flags.VisitAll(func(f *pflag.Flag) {
 		if f.Name == "print-config" {

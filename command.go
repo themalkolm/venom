@@ -17,7 +17,7 @@ func preRun(viperMaybe ...*viper.Viper) error {
 		v = viperMaybe[0]
 	}
 
-	var cfg commonConfig
+	var cfg debugConfig
 	err := v.Unmarshal(&cfg)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		v = viperMaybe[0]
 	}
 
-	err := initCommonFlags(flags)
+	err := initDebugFlags(flags)
 	if err != nil {
 		return err
 	}
