@@ -18,6 +18,16 @@ func preRun(v *viper.Viper) error {
 		return err
 	}
 
+	err = readEnv(v)
+	if err != nil {
+		return err
+	}
+
+	err = readLog(v)
+	if err != nil {
+		return err
+	}
+
 	if cfg.PrintConfig {
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "    ")
@@ -72,30 +82,10 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 				return err
 			}
 
-			err = readEnv(v)
-			if err != nil {
-				return err
-			}
-
-			err = readLog(v)
-			if err != nil {
-				return err
-			}
-
 			return preRun(v)
 		}
 	} else {
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-			err := readEnv(v)
-			if err != nil {
-				return err
-			}
-
-			err = readLog(v)
-			if err != nil {
-				return err
-			}
-
 			return preRun(v)
 		}
 	}
