@@ -90,10 +90,12 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 			if err != nil {
 				return err
 			}
+
 			err = readLog(v)
 			if err != nil {
 				return err
 			}
+
 			return preRun(v)
 		}
 	}
