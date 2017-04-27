@@ -50,16 +50,16 @@ func parseStringSliceFlags(flagNames []string, v *viper.Viper) {
 		}
 
 		value := v.GetString(k)
-		value = strings.TrimSpace(value)
-		if value == "" {
-			v.Set(k, []string{})
-			continue // skip empty values
+		parts := strings.Split(value, ",")
+
+		values := []string{}
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p != "" { // skip empty values
+				values = append(values, p)
+			}
 		}
 
-		parts := strings.Split(value, ",")
-		for i, p := range parts {
-			parts[i] = strings.TrimSpace(p)
-		}
-		v.Set(k, parts)
+		v.Set(k, values)
 	}
 }
