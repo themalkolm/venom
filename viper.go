@@ -43,8 +43,8 @@ func automaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 //
 // https://github.com/spf13/viper/pull/319
 //
-func patchViper(stringSliceKeys []string, v *viper.Viper) {
-	for _, k := range stringSliceKeys {
+func parseStringSliceFlags(flagNames []string, v *viper.Viper) {
+	for _, k := range flagNames {
 		if v.Get(k) == nil {
 			continue // skip nil values
 		}
