@@ -9,6 +9,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	LogLevels  = []string{}
+	LogFormats = []string{"text", "json"}
+)
+
+func init() {
+	for _, l := range logrus.AllLevels {
+		LogLevels = append(LogLevels, l.String())
+	}
+}
+
 type logConfig struct {
 	LogLevel     string `mapstructure:"log-level"`
 	LogFormatter string `mapstructure:"log-format"`
@@ -25,17 +36,8 @@ func initLogFlags(flags *pflag.FlagSet) error {
 		return fmt.Errorf("%d errors:\n%s", len(errors), strings.Join(errors, "\n"))
 	}
 
-	var levels []string
-	for _, l := range logrus.AllLevels {
-		levels = append(levels, l.String())
-	}
-	flags.StringP("log-level", "", "info", fmt.Sprintf("Log level [%s]", strings.Join(levels, "|")))
-
-	formats := []string{
-		"json",
-		"text",
-	}
-	flags.StringP("log-format", "", "text", fmt.Sprintf("Log format [%s]", strings.Join(formats, "|")))
+	flags.StringP("log-level", "", "info", fmt.Sprintf("Log level [%s]", strings.Join(LogLevels, "|")))
+	flags.StringP("log-format", "", "text", fmt.Sprintf("Log format [%s]", strings.Join(LogFormats, "|")))
 	return nil
 }
 
