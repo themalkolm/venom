@@ -11,32 +11,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-//
-// Viper does not decode string slices correctly
-//
-// https://github.com/spf13/viper/pull/319
-//
-func patchViper(stringSliceKeys []string, v *viper.Viper) {
-	for _, k := range stringSliceKeys {
-		if v.Get(k) == nil {
-			continue // skip nil values
-		}
-
-		value := v.GetString(k)
-		value = strings.TrimSpace(value)
-		if value == "" {
-			v.Set(k, []string{})
-			continue // skip empty values
-		}
-
-		parts := strings.Split(value, ",")
-		for i, p := range parts {
-			parts[i] = strings.TrimSpace(p)
-		}
-		v.Set(k, parts)
-	}
-}
-
 func preRun(viperMaybe ...*viper.Viper) error {
 	v := viper.GetViper()
 	if len(viperMaybe) != 0 {
