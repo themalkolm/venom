@@ -108,7 +108,7 @@ func parseTag(tag string) flagInfo {
 //
 // It panics if something goes wrong.
 //
-func DefineFlags(defaults interface{}) *pflag.FlagSet {
+func MustDefineFlags(defaults interface{}) *pflag.FlagSet {
 	flags, err := NewFlags(defaults)
 	if err != nil {
 		panic(err)

@@ -60,7 +60,7 @@ func init() {
 	defaults := Config{
 		FooMoo: 43,
 	}
-	flags := venom.DefineFlags(defaults)
+	flags := venom.MustDefineFlags(defaults)
 	RootCmd.PersistentFlags().AddFlagSet(flags)
 
 	//
