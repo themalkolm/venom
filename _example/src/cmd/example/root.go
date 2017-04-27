@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v2"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/themalkolm/venom"
 )
 
@@ -81,5 +82,13 @@ func runE(cfg *Config) error {
 		return err
 	}
 	fmt.Printf("%+v", string(b))
+
+	logrus.Info("Logging using [info] level")
+	logrus.Warn("Logging using [warning] level")
+	logrus.Debug("Logging using [debug] level")
+	logrus.Error("Logging using [error] level")
+	logrus.Fatal("Logging using [fatal] level")
+	logrus.Panic("Logging using [panic] level")
+
 	return nil
 }

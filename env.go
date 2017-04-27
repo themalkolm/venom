@@ -214,6 +214,11 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		return err
 	}
 
+	err = initLogFlags(flags)
+	if err != nil {
+		return err
+	}
+
 	if name == "" {
 		parts := strings.SplitN(cmd.Use, " ", 2)
 		if len(parts) == 0 {
@@ -241,11 +246,20 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 				return err
 			}
 
+			err = readLog(v)
+			if err != nil {
+				return err
+			}
+
 			return preRun(v)
 		}
 	} else {
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
 			err := readEnv(v)
+			if err != nil {
+				return err
+			}
+			err = readLog(v)
 			if err != nil {
 				return err
 			}
