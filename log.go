@@ -36,8 +36,8 @@ func initLogFlags(flags *pflag.FlagSet) error {
 		return fmt.Errorf("%d errors:\n%s", len(errors), strings.Join(errors, "\n"))
 	}
 
-	flags.StringP("log-level", "", "info", fmt.Sprintf("Log level [%s]", strings.Join(LogLevels, "|")))
-	flags.StringP("log-format", "", "text", fmt.Sprintf("Log format [%s]", strings.Join(LogFormats, "|")))
+	flags.String("log-level", "info", fmt.Sprintf("Log level [%s]", strings.Join(LogLevels, "|")))
+	flags.String("log-format", "text", fmt.Sprintf("Log format [%s]", strings.Join(LogFormats, "|")))
 	return nil
 }
 
