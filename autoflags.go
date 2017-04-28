@@ -273,12 +273,25 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 	shorthand := fi.shorthand
 	usage := fi.usage
 
+	//
+	// Note that switch on type must be *before* the next one that is on kind. This is to prevent kind capturing
+	// types that are simply aliases for native types e.g. time.Duration.
+	//
 	switch fieldType {
 	case reflect.TypeOf(time.Time{}):
 		val := fieldValue.Interface().(time.Time)
 		p := &time.Time{}
 
 		value := newTimeValue(val, p)
+		flags.VarP(value, name, shorthand, usage)
+		return &flags, nil
+	case reflect.TypeOf(time.Duration(0)):
+		val := fieldValue.Interface().(time.Duration)
+
+		d := time.Duration(0)
+		p := &d
+
+		value := newDurationValue(val, p)
 		flags.VarP(value, name, shorthand, usage)
 		return &flags, nil
 	}

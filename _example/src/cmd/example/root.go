@@ -43,14 +43,15 @@ type Inner struct {
 type Config struct {
 	Inner `mapstructure:",squash" pflag:"++"`
 
-	Foo     string    `mapstructure:"foo"`
-	FooBar  string    `mapstructure:"foo-bar"`
-	FooMoo  int       `mapstructure:"foo-moo"  pflag:"foo-moo,m,Some mooness must be set"`
-	Time    time.Time `mapstructure:"time" pflag:"time,,Some time"`
-	Bools   []bool    `mapstructure:"bools"  pflag:"bools,,Some bools"`
-	Ints    []int     `mapstructure:"ints"  pflag:"ints,,Some ints"`
-	Uints   []uint    `mapstructure:"uints"  pflag:"uints,,Some uints"`
-	Strings []string  `mapstructure:"strings"  pflag:"strings,,Some strings"`
+	Foo      string        `mapstructure:"foo"`
+	FooBar   string        `mapstructure:"foo-bar"`
+	FooMoo   int           `mapstructure:"foo-moo"  pflag:"foo-moo,m,Some mooness must be set"`
+	Time     time.Time     `mapstructure:"time" pflag:"time,,Some time"`
+	Duration time.Duration `mapstructure:"duration" pflag:"duration,,Some duration"`
+	Bools    []bool        `mapstructure:"bools"  pflag:"bools,,Some bools"`
+	Ints     []int         `mapstructure:"ints"  pflag:"ints,,Some ints"`
+	Uints    []uint        `mapstructure:"uints"  pflag:"uints,,Some uints"`
+	Strings  []string      `mapstructure:"strings"  pflag:"strings,,Some strings"`
 }
 
 func init() {
