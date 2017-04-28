@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -42,9 +43,10 @@ type Inner struct {
 type Config struct {
 	Inner `mapstructure:",squash" pflag:"++"`
 
-	Foo    string `mapstructure:"foo"`
-	FooBar string `mapstructure:"foo-bar"`
-	FooMoo int    `mapstructure:"foo-moo" pflag:"foo-moo,m,Some mooness must be set"`
+	Foo      string    `mapstructure:"foo"`
+	FooBar   string    `mapstructure:"foo-bar"`
+	FooMoo   int       `mapstructure:"foo-moo"  pflag:"foo-moo,m,Some mooness must be set"`
+	Deadline time.Time `mapstructure:"deadline" pflag:"deadline,,Some deadline"`
 }
 
 func init() {
