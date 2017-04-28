@@ -35,7 +35,7 @@ func initDebugFlags(flags *pflag.FlagSet) error {
 
 func readDebug(v *viper.Viper) error {
 	var cfg debugConfig
-	err := v.Unmarshal(&cfg)
+	err := Unmarshal(&cfg, v)
 	if err != nil {
 		return err
 	}

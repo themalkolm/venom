@@ -67,7 +67,7 @@ func readEnv(v *viper.Viper) error {
 	parseStringSliceFlags([]string{"env", "env-file"}, v)
 
 	var cfg envConfig
-	err := v.Unmarshal(&cfg)
+	err := Unmarshal(&cfg, v)
 	if err != nil {
 		return err
 	}

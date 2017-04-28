@@ -45,7 +45,7 @@ func initLogFlags(flags *pflag.FlagSet) error {
 
 func readLog(v *viper.Viper) error {
 	var cfg logConfig
-	err := v.Unmarshal(&cfg)
+	err := Unmarshal(&cfg, v)
 	if err != nil {
 		return err
 	}

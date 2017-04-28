@@ -28,7 +28,7 @@ var RootCmd = &cobra.Command{
 		// structure.
 		//
 		var cfg Config
-		err := viper.Unmarshal(&cfg)
+		err := venom.Unmarshal(&cfg, viper.GetViper())
 		if err != nil {
 			return err
 		}
