@@ -31,7 +31,7 @@ func newTimeValue(val time.Time, p *time.Time) *timeValue {
 }
 
 func (v *timeValue) Set(s string) error {
-	val, err := time.Parse(s, DefaultTimeFormat)
+	val, err := time.Parse(DefaultTimeFormat, s)
 	*v = timeValue(val)
 	return err
 }
