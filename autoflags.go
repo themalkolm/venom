@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/spf13/pflag"
 )
@@ -304,7 +305,16 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 		value := string(fieldValue.String())
 		flags.StringP(name, shorthand, value, usage)
 	default:
-		return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
+		switch fieldType {
+		case reflect.TypeOf(time.Time{}):
+			val := fieldValue.Interface().(time.Time)
+			p := &time.Time{}
+
+			value := newTimeValue(val, p)
+			flags.VarP(value, name, shorthand, usage)
+		default:
+			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
+		}
 	}
 	return &flags, nil
 }
