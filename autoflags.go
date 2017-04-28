@@ -273,6 +273,16 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 	shorthand := fi.shorthand
 	usage := fi.usage
 
+	switch fieldType {
+	case reflect.TypeOf(time.Time{}):
+		val := fieldValue.Interface().(time.Time)
+		p := &time.Time{}
+
+		value := newTimeValue(val, p)
+		flags.VarP(value, name, shorthand, usage)
+		return &flags, nil
+	}
+
 	switch fieldType.Kind() {
 	case reflect.Bool:
 		value := bool(fieldValue.Bool())
@@ -334,16 +344,7 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 			return nil, fmt.Errorf("Unsupported slice type for field with flag tag %q: %s", name, fieldType)
 		}
 	default:
-		switch fieldType {
-		case reflect.TypeOf(time.Time{}):
-			val := fieldValue.Interface().(time.Time)
-			p := &time.Time{}
-
-			value := newTimeValue(val, p)
-			flags.VarP(value, name, shorthand, usage)
-		default:
-			return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
-		}
+		return nil, fmt.Errorf("Unsupported type for field with flag tag %q: %s", name, fieldType)
 	}
 	return &flags, nil
 }
