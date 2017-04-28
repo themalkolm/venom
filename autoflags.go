@@ -246,6 +246,18 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 	return &flags, nil
 }
 
+func cloneSlice(slice interface{}) interface{} {
+	t, v := reflect.TypeOf(slice), reflect.ValueOf(slice)
+
+	v2 := reflect.MakeSlice(t, v.Len(), v.Len())
+	n := reflect.Copy(v2, v)
+	if n != v.Len() {
+		panic(fmt.Sprintf("Failed to copy slice: %d != %d", n, v.Len()))
+	}
+
+	return v2.Interface()
+}
+
 //
 // Note that we pass both field value and field type as it is defined in the struct. I'm not 100% sure about this and
 // just playing safe here:
@@ -307,12 +319,8 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 	case reflect.Slice:
 		switch fieldType.Elem().Kind() {
 		case reflect.String:
-			sliceValue := []string{}
-			for i := 0; i < fieldValue.Len(); i++ {
-				v := fieldValue.Index(i).String()
-				sliceValue = append(sliceValue, v)
-			}
-			flags.StringSliceP(name, shorthand, sliceValue, usage)
+			value := cloneSlice(fieldValue.Interface()).([]string)
+			flags.StringSliceP(name, shorthand, value, usage)
 		default:
 			return nil, fmt.Errorf("Unsupported slice type for field with flag tag %q: %s", name, fieldType)
 		}
