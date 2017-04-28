@@ -29,7 +29,7 @@ func (v *timeValue) Type() string {
 }
 
 func (v *timeValue) String() string {
-	return time.Time(*v).String()
+	return time.Time(*v).Format(DefaultTimeFormat)
 }
 
 //
