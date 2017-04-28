@@ -64,8 +64,6 @@ func initEnvFlags(flags *pflag.FlagSet) error {
 }
 
 func readEnv(v *viper.Viper) error {
-	parseStringSliceFlags([]string{"env", "env-file"}, v)
-
 	var cfg envConfig
 	err := Unmarshal(&cfg, v)
 	if err != nil {

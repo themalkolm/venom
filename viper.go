@@ -37,29 +37,3 @@ func automaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 	v.SetEnvKeyReplacer(strings.NewReplacer(values...))
 	v.AutomaticEnv()
 }
-
-//
-// Viper does not decode string slices correctly
-//
-// https://github.com/spf13/viper/pull/319
-//
-func parseStringSliceFlags(flagNames []string, v *viper.Viper) {
-	for _, k := range flagNames {
-		if v.Get(k) == nil {
-			continue // skip nil values
-		}
-
-		value := v.GetString(k)
-		parts := strings.Split(value, ",")
-
-		values := []string{}
-		for _, p := range parts {
-			p = strings.TrimSpace(p)
-			if p != "" { // skip empty values
-				values = append(values, p)
-			}
-		}
-
-		v.Set(k, values)
-	}
-}
