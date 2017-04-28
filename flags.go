@@ -1,3 +1,15 @@
+//
+// Here we implement extra flags to extend pflag/viper binding.
+//
+// https://godoc.org/github.com/spf13/pflag#Value
+//
+// type Value interface {
+//     String() string
+//     Set(string) error
+//     Type() string
+// }
+//
+
 package venom
 
 import (
