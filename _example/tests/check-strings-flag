@@ -1,0 +1,21 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "strings: []"
+}
+
+spawn ./bin/example --strings foo
+expect {
+    default { puts "FAIL"; exit 1 }
+    "strings:*- foo"
+}
+
+spawn ./bin/example --strings foo,bar
+expect {
+    default { puts "FAIL"; exit 1 }
+    "strings:*- foo*- bar"
+}
