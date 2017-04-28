@@ -25,7 +25,7 @@ func (v *timeValue) Set(s string) error {
 }
 
 func (v *timeValue) Type() string {
-	return "time.Time"
+	return "time"
 }
 
 func (v *timeValue) String() string {
@@ -49,7 +49,7 @@ func (v *durationValue) Set(s string) error {
 }
 
 func (v *durationValue) Type() string {
-	return "time.Duration"
+	return "duration"
 }
 
 func (v *durationValue) String() string {
