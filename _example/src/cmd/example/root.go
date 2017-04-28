@@ -47,6 +47,7 @@ type Config struct {
 	FooBar   string    `mapstructure:"foo-bar"`
 	FooMoo   int       `mapstructure:"foo-moo"  pflag:"foo-moo,m,Some mooness must be set"`
 	Deadline time.Time `mapstructure:"deadline" pflag:"deadline,,Some deadline"`
+	Strings  []string  `mapstructure:"strings"  pflag:"strings,,Some strings"`
 }
 
 func init() {

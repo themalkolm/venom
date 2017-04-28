@@ -304,6 +304,19 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 	case reflect.String:
 		value := string(fieldValue.String())
 		flags.StringP(name, shorthand, value, usage)
+	case reflect.Slice:
+		switch fieldType.Elem().Kind() {
+		case reflect.String:
+			sliceValue := []string{}
+			for i := 0; i < fieldValue.Len(); i++ {
+				v := fieldValue.Index(i).String()
+				sliceValue = append(sliceValue, v)
+			}
+			flags.StringSliceP(name, shorthand, sliceValue, usage)
+		default:
+			return nil, fmt.Errorf("Unsupported slice type for field with flag tag %q: %s", name, fieldType)
+		}
+
 	default:
 		switch fieldType {
 		case reflect.TypeOf(time.Time{}):
