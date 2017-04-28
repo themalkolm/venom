@@ -14,6 +14,9 @@ func defaultDecoderConfig(output interface{}) *mapstructure.DecoderConfig {
 		WeaklyTypedInput: true,
 		DecodeHook: mapstructure.ComposeDecodeHookFunc(
 			stringToStringSliceHookFunc(","),
+			stringToBoolSliceHookFunc(","),
+			stringToIntSliceHookFunc(","),
+			stringToUintSliceHookFunc(","),
 			stringToTimeDurationHookFunc(),
 			stringToTimeHookFunc(time.RFC3339),
 		),

@@ -1,0 +1,21 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "ints: []"
+}
+
+spawn ./bin/example --ints 89
+expect {
+    default { puts "FAIL"; exit 1 }
+    "ints:*- 89"
+}
+
+spawn ./bin/example --ints 89,453
+expect {
+    default { puts "FAIL"; exit 1 }
+    "ints:*- 89*- 453"
+}

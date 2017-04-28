@@ -318,6 +318,15 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 		flags.StringP(name, shorthand, value, usage)
 	case reflect.Slice:
 		switch fieldType.Elem().Kind() {
+		case reflect.Bool:
+			value := cloneSlice(fieldValue.Interface()).([]bool)
+			flags.BoolSliceP(name, shorthand, value, usage)
+		case reflect.Int:
+			value := cloneSlice(fieldValue.Interface()).([]int)
+			flags.IntSliceP(name, shorthand, value, usage)
+		case reflect.Uint:
+			value := cloneSlice(fieldValue.Interface()).([]uint)
+			flags.UintSliceP(name, shorthand, value, usage)
 		case reflect.String:
 			value := cloneSlice(fieldValue.Interface()).([]string)
 			flags.StringSliceP(name, shorthand, value, usage)

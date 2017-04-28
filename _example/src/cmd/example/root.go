@@ -47,6 +47,9 @@ type Config struct {
 	FooBar   string    `mapstructure:"foo-bar"`
 	FooMoo   int       `mapstructure:"foo-moo"  pflag:"foo-moo,m,Some mooness must be set"`
 	Deadline time.Time `mapstructure:"deadline" pflag:"deadline,,Some deadline"`
+	Bools    []bool    `mapstructure:"bools"  pflag:"bools,,Some bools"`
+	Ints     []int     `mapstructure:"ints"  pflag:"ints,,Some ints"`
+	Uints    []uint    `mapstructure:"uints"  pflag:"uints,,Some uints"`
 	Strings  []string  `mapstructure:"strings"  pflag:"strings,,Some strings"`
 }
 

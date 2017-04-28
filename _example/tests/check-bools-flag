@@ -1,0 +1,21 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "bools: []"
+}
+
+spawn ./bin/example --bools 1
+expect {
+    default { puts "FAIL"; exit 1 }
+    "bools:*- true"
+}
+
+spawn ./bin/example --bools 1,0
+expect {
+    default { puts "FAIL"; exit 1 }
+    "bools:*- true*- false"
+}
