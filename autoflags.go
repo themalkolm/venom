@@ -333,7 +333,6 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 		default:
 			return nil, fmt.Errorf("Unsupported slice type for field with flag tag %q: %s", name, fieldType)
 		}
-
 	default:
 		switch fieldType {
 		case reflect.TypeOf(time.Time{}):
