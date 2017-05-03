@@ -2,6 +2,7 @@ package tests
 
 import (
 	"testing"
+	"io"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/stretchr/testify/assert"
@@ -25,9 +26,15 @@ var (
 		"{}-[nil]":      {err: &multierror.Error{}, errs: []error{nil}},
 		"{}-[nil,nil]":  {err: &multierror.Error{}, errs: []error{nil, nil}},
 	}
+	tableNonNil = map[string]pair{
+		"{EOF}-nil":        {err: &multierror.Error{Errors: []error{io.EOF}}, errs: nil},
+		"{EOF}-[]":         {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{}},
+		"{EOF}-[nil]":      {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{nil}},
+		"{EOF}-[nil,nil]":  {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{nil, nil}},
+	}
 )
 
-func TestAppend(t *testing.T) {
+func TestAppend_Nil(t *testing.T) {
 	for name, p := range tableNil {
 		t.Run(name, func(t *testing.T) {
 			ret := multierror.Append(p.err, p.errs...)
@@ -36,11 +43,30 @@ func TestAppend(t *testing.T) {
 	}
 }
 
-func TestAppendErr(t *testing.T) {
+func TestAppend_NonNil(t *testing.T) {
+	for name, p := range tableNonNil {
+		t.Run(name, func(t *testing.T) {
+			ret := multierror.Append(p.err, p.errs...)
+			assert.NotNil(t, ret)
+		})
+	}
+}
+
+func TestAppendErr_Nil(t *testing.T) {
 	for name, p := range tableNil {
 		t.Run(name, func(t *testing.T) {
 			ret := venom.AppendErr(p.err, p.errs...)
 			assert.Nil(t, ret)
+		})
+	}
+}
+
+
+func TestAppendErr_NonNil(t *testing.T) {
+	for name, p := range tableNonNil {
+		t.Run(name, func(t *testing.T) {
+			ret := venom.AppendErr(p.err, p.errs...)
+			assert.NotNil(t, ret)
 		})
 	}
 }
