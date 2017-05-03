@@ -15,7 +15,7 @@ type pair struct {
 }
 
 var (
-	table = map[string]pair{
+	tableNil = map[string]pair{
 		"nil-nil":       {err: nil, errs: nil},
 		"nil-[]":        {err: nil, errs: []error{}},
 		"nil-[nil]":     {err: nil, errs: []error{nil}},
@@ -28,7 +28,7 @@ var (
 )
 
 func TestAppend(t *testing.T) {
-	for name, p := range table {
+	for name, p := range tableNil {
 		t.Run(name, func(t *testing.T) {
 			ret := multierror.Append(p.err, p.errs...)
 			assert.NotNil(t, ret)
@@ -37,7 +37,7 @@ func TestAppend(t *testing.T) {
 }
 
 func TestAppendErr(t *testing.T) {
-	for name, p := range table {
+	for name, p := range tableNil {
 		t.Run(name, func(t *testing.T) {
 			ret := venom.AppendErr(p.err, p.errs...)
 			assert.Nil(t, ret)
