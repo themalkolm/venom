@@ -7,6 +7,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+//
+// Same as viper.Unmarshal but with support for string slices, time etc.
+//
+func Unmarshal(out interface{}, cfg *viper.Viper) error {
+	return decode(cfg.AllSettings(), defaultDecoderConfig(out))
+}
+
 func defaultDecoderConfig(output interface{}) *mapstructure.DecoderConfig {
 	return &mapstructure.DecoderConfig{
 		Metadata:         nil,
@@ -29,8 +36,4 @@ func decode(input interface{}, config *mapstructure.DecoderConfig) error {
 		return err
 	}
 	return decoder.Decode(input)
-}
-
-func Unmarshal(rawVal interface{}, v *viper.Viper) error {
-	return decode((*viper.Viper)(v).AllSettings(), defaultDecoderConfig(rawVal))
 }
