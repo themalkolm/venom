@@ -1,12 +1,17 @@
 package venom
 
 import (
+	"reflect"
+
 	"github.com/hashicorp/go-multierror"
 )
 
 func allNil(errs []error) bool {
 	for _, e := range errs {
 		if e != nil {
+			return false
+		}
+		if !reflect.ValueOf(e).IsNil() {
 			return false
 		}
 	}
