@@ -6,14 +6,17 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
+func isNil(e error) bool {
+	return e == nil || reflect.ValueOf(e).IsNil()
+}
+
 func allNil(errs []error) bool {
 	for _, e := range errs {
-		if e != nil {
-			return false
+		if isNil(e) {
+			continue
 		}
-		if !reflect.ValueOf(e).IsNil() {
-			return false
-		}
+
+		return false
 	}
 	return true
 }
