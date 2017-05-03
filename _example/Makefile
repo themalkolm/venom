@@ -20,10 +20,17 @@ $(TESTS):
 	@echo "----------------------------------------------------------------------"
 	$@
 
-test: $(TESTS)
+expecttest: $(TESTS)
 	@echo "----------------------------------------------------------------------"
 	@echo ""
 	@echo "Run $(words $?) tests: OK"
+
+.PHONY: gotest
+gotest:
+	gb test -v ...
+
+.PHONY: test
+test: gotest expecttest
 
 clean:
 	rm -rf bin pkg

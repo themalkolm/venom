@@ -6,6 +6,9 @@ fmt:
 build: fmt
 	$(MAKE) -C _example build
 
+gotest: build
+	$(MAKE) -C _example gotest
+
 test: build
 	$(MAKE) -C _example test
 
