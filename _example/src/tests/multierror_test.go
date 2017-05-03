@@ -1,8 +1,8 @@
 package tests
 
 import (
-	"testing"
 	"io"
+	"testing"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/stretchr/testify/assert"
@@ -27,10 +27,10 @@ var (
 		"{}-[nil,nil]":  {err: &multierror.Error{}, errs: []error{nil, nil}},
 	}
 	tableNonNil = map[string]pair{
-		"{EOF}-nil":        {err: &multierror.Error{Errors: []error{io.EOF}}, errs: nil},
-		"{EOF}-[]":         {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{}},
-		"{EOF}-[nil]":      {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{nil}},
-		"{EOF}-[nil,nil]":  {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{nil, nil}},
+		"{EOF}-nil":       {err: &multierror.Error{Errors: []error{io.EOF}}, errs: nil},
+		"{EOF}-[]":        {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{}},
+		"{EOF}-[nil]":     {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{nil}},
+		"{EOF}-[nil,nil]": {err: &multierror.Error{Errors: []error{io.EOF}}, errs: []error{nil, nil}},
 	}
 )
 
@@ -60,7 +60,6 @@ func TestAppendErr_Nil(t *testing.T) {
 		})
 	}
 }
-
 
 func TestAppendErr_NonNil(t *testing.T) {
 	for name, p := range tableNonNil {
