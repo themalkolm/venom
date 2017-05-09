@@ -177,6 +177,16 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 		// they are defined in the outer structure.
 		//
 		if tag == SquashFlagsTag {
+			//
+			// In case we have mapstructure defined it must be ",squash"
+			//
+			mapTag, ok := structField.Tag.Lookup("mapstructure")
+			if ok {
+				if mapTag != ",squash" {
+					return nil, fmt.Errorf(`Requirement flag:"%s" => mapstructure:",squash" but mapstructure:"%s" found on: %s`, SquashFlagsTag, mapTag, structField.Name)
+				}
+			}
+
 			if fieldType.Kind() != reflect.Struct {
 				return nil, fmt.Errorf(`flag:"%s" is supported only for inner structs but is set on: %s`, SquashFlagsTag, fieldType)
 			}
