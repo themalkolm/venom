@@ -43,7 +43,7 @@ func envKeyReplacer(flags *pflag.FlagSet) *strings.Replacer {
 
 //
 // Better version of viper.AutomaticEnv that searches FOO_BAR for every --foo-bar key in
-// addition to the default FOO-BAR.
+// addition (?) to the default FOO-BAR.
 //
 // Note that it must be called *after* all flags are added.
 //
