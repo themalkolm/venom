@@ -8,6 +8,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	//
+	// Hide flags that are used to generate result configuration itself.
+	//
+	hideFlags = []string{"print-config", "env", "env-file"}
+)
+
 //
 // Debug configuration for every venom command. Makes it easier to debug and figure
 // out how exactly all env, flags etc. are merged.
@@ -33,7 +40,7 @@ func readDebug(v *viper.Viper) error {
 		enc.SetIndent("", "    ")
 
 		all := v.AllSettings()
-		for _, k := range []string{"print-config", "env", "env-file"} {
+		for _, k := range hideFlags {
 			delete(all, k)
 		}
 
