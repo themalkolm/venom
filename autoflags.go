@@ -291,7 +291,8 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 
 	//
 	// Note that switch on type must be *before* the next one that is on kind. This is to prevent kind capturing
-	// types that are simply aliases for native types e.g. time.Duration.
+	// types that are simply aliases for native types e.g. time.Duration. Such type aliases are not distinguishable
+	// at this level.
 	//
 	switch fieldType {
 	case reflect.TypeOf(time.Time{}):
