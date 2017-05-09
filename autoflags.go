@@ -252,7 +252,7 @@ func cloneSlice(slice interface{}) interface{} {
 	v2 := reflect.MakeSlice(t, v.Len(), v.Len())
 	n := reflect.Copy(v2, v)
 	if n != v.Len() {
-		panic(fmt.Sprintf("Failed to copy slice: %d != %d", n, v.Len()))
+		panic(fmt.Sprintf("Failed to clone slice: %d != %d", n, v.Len()))
 	}
 
 	return v2.Interface()
