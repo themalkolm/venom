@@ -190,9 +190,9 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 
 			// Check if struct-ptr implements HasFlags
 			if fieldValue.CanAddr() {
-				fieldValueAddr := fieldValue.Addr()
+				fieldValuePtr := fieldValue.Addr()
 
-				if hasFlags, ok := fieldValueAddr.Interface().(HasFlags); ok {
+				if hasFlags, ok := fieldValuePtr.Interface().(HasFlags); ok {
 					innerFlags := hasFlags.Flags()
 					flags.AddFlagSet(innerFlags)
 					continue
