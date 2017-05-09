@@ -173,20 +173,35 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 		}
 
 		//
+		// Make sure mapstructure tag is in sync with flag tag. This is not a hard requirement but
+		// is almost certainly what you want to check every time.
+		//
+		mapTag, ok := structField.Tag.Lookup("mapstructure")
+		if ok {
+			switch tag {
+			case SquashFlagsTag:
+				//
+				// In case we have mapstructure defined it must be ",squash"
+				//
+				if mapTag != ",squash" {
+					return nil, fmt.Errorf(`Requirement flag:"%s" => mapstructure:",squash" but mapstructure:"%s" found on: %s`, SquashFlagsTag, mapTag, structField.Name)
+				}
+			default:
+				//
+				// In case we have mapstructure defined it must have exactly the same name as flag has.
+				//
+				mapName, ok := parseMapstructureTag(mapTag)
+				if ok && !(tag == mapName || strings.HasPrefix(tag, mapName+",")) {
+					return nil, fmt.Errorf(`Both "mapstructure" and "flag" tags must have equal names but are different for field: %s`, structField.Name)
+				}
+			}
+		}
+
+		//
 		// This means we want to squash all flags from either struct field or inner structure so they appear as is
 		// they are defined in the outer structure.
 		//
 		if tag == SquashFlagsTag {
-			//
-			// In case we have mapstructure defined it must be ",squash"
-			//
-			mapTag, ok := structField.Tag.Lookup("mapstructure")
-			if ok {
-				if mapTag != ",squash" {
-					return nil, fmt.Errorf(`Requirement flag:"%s" => mapstructure:",squash" but mapstructure:"%s" found on: %s`, SquashFlagsTag, mapTag, structField.Name)
-				}
-			}
-
 			if fieldType.Kind() != reflect.Struct {
 				return nil, fmt.Errorf(`flag:"%s" is supported only for inner structs but is set on: %s`, SquashFlagsTag, fieldType)
 			}
@@ -231,18 +246,6 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			}
 			flags.AddFlagSet(innerFlags)
 			continue
-		}
-
-		//
-		// In case we have mapstructure defined it must have exactly the same name as flag has.
-		//
-		mapTag, ok := structField.Tag.Lookup("mapstructure")
-		if ok {
-			mapName, ok := parseMapstructureTag(mapTag)
-			if ok && !(tag == mapName || strings.HasPrefix(tag, mapName+",")) {
-				return nil, fmt.Errorf(`Both "mapstructure" and "flag" tags must have equal names but are different for field: %s`, structField.Name)
-				continue
-			}
 		}
 
 		fi, err := parseTag(tag)
