@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func preRun(v *viper.Viper) error {
+func preRun(flags *pflag.FlagSet, v *viper.Viper) error {
 	err := readEnv(v)
 	if err != nil {
 		return err
@@ -21,7 +21,7 @@ func preRun(v *viper.Viper) error {
 	}
 
 	// must be the last one
-	err = readDebug(v)
+	err = readDebug(flags, v)
 	if err != nil {
 		return err
 	}
@@ -63,11 +63,11 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 				return err
 			}
 
-			return preRun(v)
+			return preRun(flags, v)
 		}
 	} else {
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-			return preRun(v)
+			return preRun(flags, v)
 		}
 	}
 
