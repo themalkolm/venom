@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+func sanitize(s string) string {
+	return strings.Replace(s, "-", "_", -1)
+}
+
 func allKeys(m map[string]string) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {

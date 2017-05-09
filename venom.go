@@ -7,10 +7,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-func sanitize(s string) string {
-	return strings.Replace(s, "-", "_", -1)
-}
-
 //
 // 12-factor setup for viper-backed application.
 //
