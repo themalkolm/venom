@@ -37,8 +37,7 @@ func automaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 
 	values := make([]string, 0, 2*len(keys))
 	for _, k := range keys {
-		values = append(values, k)
-		values = append(values, replaceMap[k])
+		values = append(values, k, replaceMap[k])
 	}
 
 	v.SetEnvKeyReplacer(strings.NewReplacer(values...))
