@@ -73,7 +73,7 @@ type flagInfo struct {
 //     foo int `flag:"foo,f,Do some fooness"`
 // }
 //
-func parseTag(tag string) flagInfo {
+func parseTag(tag string) (flagInfo, error) {
 	parts := strings.SplitN(tag, ",", 3)
 
 	// flag: bar, b, Some barness -> flag: bar,b,Some barness
@@ -89,41 +89,41 @@ func parseTag(tag string) flagInfo {
 			f.name = ""
 			f.shorthand = parts[0]
 			f.usage = ""
-			return f
+			return f, nil
 		}
 		// flag: bar
 		f.name = parts[0]
 		f.shorthand = ""
 		f.usage = ""
-		return f
+		return f, nil
 	case 2:
 		// flag: b,Some barness
 		if len(parts[0]) == 1 {
 			f.name = ""
 			f.shorthand = parts[0]
 			f.usage = parts[1]
-			return f
+			return f, nil
 		}
 		// flag: bar,b
 		if len(parts[1]) == 1 {
 			f.name = parts[0]
 			f.shorthand = parts[1]
 			f.usage = ""
-			return f
+			return f, nil
 		}
 		// flag: bar,Some barness
 		f.name = parts[0]
 		f.shorthand = ""
 		f.usage = parts[1]
-		return f
+		return f, nil
 	case 3:
 		// flag: bar,b,Some barness
 		f.name = parts[0]
 		f.shorthand = parts[1]
 		f.usage = parts[2]
-		return f
+		return f, nil
 	default:
-		return f
+		return f, fmt.Errorf("Failed to parse flag tag: %s", tag)
 	}
 }
 
@@ -235,7 +235,10 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 			}
 		}
 
-		fi := parseTag(tag)
+		fi, err := parseTag(tag)
+		if err != nil {
+			return nil, err
+		}
 		fs, err := a.createFlag(fi, fieldValue, fieldType)
 		if err != nil {
 			return nil, err
