@@ -173,8 +173,8 @@ func (a flagsFactory) createFlags(defaults interface{}) (*pflag.FlagSet, error) 
 		}
 
 		//
-		// This means we want to squash all flags from the inner structure so they appear as is they are defined
-		// in the outer structure.
+		// This means we want to squash all flags from either struct field or inner structure so they appear as is
+		// they are defined in the outer structure.
 		//
 		if tag == SquashFlagsTag {
 			if fieldType.Kind() != reflect.Struct {
