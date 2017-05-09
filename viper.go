@@ -8,6 +8,14 @@ import (
 	"github.com/spf13/viper"
 )
 
+func allKeys(m map[string]string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 //
 // Better version of viper.AutomaticEnv that searches FOO_BAR for every --foo-bar key in
 // addition to the default FOO-BAR.
@@ -21,10 +29,7 @@ func automaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 		replaceMap[name] = sanitize(name)
 	})
 
-	keys := make([]string, 0, len(replaceMap))
-	for k := range replaceMap {
-		keys = append(keys, k)
-	}
+	keys := allKeys(replaceMap)
 
 	// Reverse sort keys, this is to make sure foo-bar comes before foo. This is to prevent
 	// foo being triggered when foo-bar is given to string replacer.
