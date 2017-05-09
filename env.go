@@ -48,16 +48,6 @@ type envConfig struct {
 }
 
 func initEnvFlags(flags *pflag.FlagSet) error {
-	var errors []string
-	flags.VisitAll(func(f *pflag.Flag) {
-		if f.Name == "env" || f.Name == "env-file" {
-			errors = append(errors, fmt.Sprintf("Flag %s already defined!", f.Name))
-		}
-	})
-	if len(errors) > 0 {
-		return fmt.Errorf("%d errors:\n%s", len(errors), strings.Join(errors, "\n"))
-	}
-
 	flags.StringSliceP("env", "e", nil, "Set environment variables")
 	flags.StringSlice("env-file", nil, "Read in a file of environment variables")
 	return nil

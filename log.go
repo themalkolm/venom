@@ -28,16 +28,6 @@ type logConfig struct {
 }
 
 func initLogFlags(flags *pflag.FlagSet) error {
-	var errors []string
-	flags.VisitAll(func(f *pflag.Flag) {
-		if f.Name == "log-level" || f.Name == "log-format" {
-			errors = append(errors, fmt.Sprintf("Flag %s already defined!", f.Name))
-		}
-	})
-	if len(errors) > 0 {
-		return fmt.Errorf("%d errors:\n%s", len(errors), strings.Join(errors, "\n"))
-	}
-
 	flags.String("log-level", "info", fmt.Sprintf("Log level [%s]", strings.Join(LogLevels, "|")))
 	flags.String("log-format", "text", fmt.Sprintf("Log format [%s]", strings.Join(LogFormats, "|")))
 	return nil
