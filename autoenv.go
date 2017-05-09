@@ -20,13 +20,7 @@ func allKeys(m map[string]string) []string {
 	return keys
 }
 
-//
-// Better version of viper.AutomaticEnv that searches FOO_BAR for every --foo-bar key in
-// addition to the default FOO-BAR.
-//
-// Note that it must be called *after* all flags are added.
-//
-func AutomaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
+func envKeyReplacer(flags *pflag.FlagSet) *strings.Replacer {
 	replaceMap := make(map[string]string, flags.NFlag())
 	flags.VisitAll(func(f *pflag.Flag) {
 		name := strings.ToUpper(f.Name)
@@ -44,6 +38,16 @@ func AutomaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 		values = append(values, k, replaceMap[k])
 	}
 
-	v.SetEnvKeyReplacer(strings.NewReplacer(values...))
+	return strings.NewReplacer(values...)
+}
+
+//
+// Better version of viper.AutomaticEnv that searches FOO_BAR for every --foo-bar key in
+// addition to the default FOO-BAR.
+//
+// Note that it must be called *after* all flags are added.
+//
+func AutomaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
+	v.SetEnvKeyReplacer(envKeyReplacer(flags))
 	v.AutomaticEnv()
 }
