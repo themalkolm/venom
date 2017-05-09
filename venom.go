@@ -43,7 +43,7 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 	v.SetEnvPrefix(strings.ToUpper(sanitize(name)))
 
 	// Patch automatic env
-	automaticEnv(flags, v)
+	AutomaticEnv(flags, v)
 
 	return nil
 }

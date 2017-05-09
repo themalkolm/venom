@@ -26,7 +26,7 @@ func allKeys(m map[string]string) []string {
 //
 // Note that it must be called *after* all flags are added.
 //
-func automaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
+func AutomaticEnv(flags *pflag.FlagSet, v *viper.Viper) {
 	replaceMap := make(map[string]string, flags.NFlag())
 	flags.VisitAll(func(f *pflag.Flag) {
 		name := strings.ToUpper(f.Name)
