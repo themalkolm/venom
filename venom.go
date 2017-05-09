@@ -23,7 +23,8 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 		return err
 	}
 
-	err = initEnvFlags(flags)
+	envprefix := strings.ToUpper(sanitize(name))
+	err = initEnvFlags(flags, envprefix)
 	if err != nil {
 		return err
 	}
@@ -40,7 +41,7 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 	}
 
 	// Set env prefix
-	v.SetEnvPrefix(strings.ToUpper(sanitize(name)))
+	v.SetEnvPrefix(envprefix)
 
 	// Patch automatic env
 	AutomaticEnv(flags, v)

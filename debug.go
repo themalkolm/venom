@@ -70,10 +70,15 @@ func readDebug(flags *pflag.FlagSet, v *viper.Viper) error {
 
 		sort.Strings(keys)
 
+		envprefix, found := lookupEnvPrefix(flags)
+		if !found {
+			envprefix = "?"
+		}
+
 		r := envKeyReplacer(flags)
 		for _, k := range keys {
 			v := v.Get(k)
-			fmt.Printf("%s_%s=%v\n", "?", r.Replace(strings.ToUpper(k)), v)
+			fmt.Printf("%s_%s=%v\n", envprefix, r.Replace(strings.ToUpper(k)), v)
 		}
 
 		os.Exit(0)

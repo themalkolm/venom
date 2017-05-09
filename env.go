@@ -43,11 +43,13 @@ func readEnvFile(p string) (map[string]string, error) {
 }
 
 type envConfig struct {
-	Envs     []string `mapstructure:"env"`
-	EnvFiles []string `mapstructure:"env-file"`
+	Envs      []string `mapstructure:"env"`
+	EnvFiles  []string `mapstructure:"env-file"`
+	EnvPrefix string   `mapstructure:"env-prefix"`
 }
 
-func initEnvFlags(flags *pflag.FlagSet) error {
+func initEnvFlags(flags *pflag.FlagSet, envprefix string) error {
+	flags.String("env-prefix", envprefix, "Set environment variables prefix")
 	flags.StringSliceP("env", "e", nil, "Set environment variables")
 	flags.StringSlice("env-file", nil, "Read in a file of environment variables")
 	return nil
@@ -61,6 +63,11 @@ func readEnv(v *viper.Viper) error {
 	}
 
 	envMap := make(map[string]string)
+
+	// read --env-prefix
+	if cfg.EnvPrefix != "" {
+		v.SetEnvPrefix(cfg.EnvPrefix)
+	}
 
 	// read --env-file
 	for _, f := range cfg.EnvFiles {
@@ -90,4 +97,14 @@ func readEnv(v *viper.Viper) error {
 		}
 	}
 	return nil
+}
+
+func lookupEnvPrefix(flags *pflag.FlagSet) (string, bool) {
+	envprefix := ""
+	flags.VisitAll(func(f *pflag.Flag) {
+		if f.Name == "env-prefix" {
+			envprefix = f.Value.String()
+		}
+	})
+	return envprefix, envprefix != ""
 }
