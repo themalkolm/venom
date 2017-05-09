@@ -51,7 +51,7 @@ type envConfig struct {
 func initEnvFlags(flags *pflag.FlagSet, envprefix string) error {
 	flags.String("env-prefix", envprefix, "Set environment variables prefix")
 	flags.StringSliceP("env", "e", nil, "Set environment variables")
-	flags.StringSlice("env-file", nil, "Read in a file of environment variables")
+	flags.StringSlice("env-file", nil, "Read environment variables from a text file")
 	return nil
 }
 
