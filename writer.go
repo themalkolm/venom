@@ -67,7 +67,7 @@ func WriteObjectTo(in interface{}, path string) error {
 	defer w.Close()
 
 	switch {
-	case path == "-":
+	case path == "":
 		return WriteObject(in, DefaultFormat, w)
 	case strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml"):
 		return WriteObject(in, YAMLFormat, w)
