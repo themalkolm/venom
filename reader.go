@@ -20,16 +20,16 @@ func readerFor(path string) (io.ReadCloser, error) {
 	}
 }
 
-func ReadObject(r io.Reader, format OutputFormat, out interface{}) error {
+func ReadObject(r io.Reader, format Format, out interface{}) error {
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err
 	}
 
 	switch format {
-	case OutputJSONFormat:
+	case JSONFormat:
 		return json.Unmarshal(b, out)
-	case OutputYAMLFormat:
+	case YAMLFormat:
 		return yaml.Unmarshal(b, out)
 	default:
 		return fmt.Errorf("Unrecognized format: %s", format)
@@ -45,11 +45,11 @@ func ReadObjectFrom(path string, out interface{}) error {
 
 	switch {
 	case path == "-":
-		return ReadObject(r, DefaultOutputFormat, out)
+		return ReadObject(r, DefaultFormat, out)
 	case strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml"):
-		return ReadObject(r, OutputYAMLFormat, out)
+		return ReadObject(r, YAMLFormat, out)
 	case strings.HasSuffix(path, ".json"):
-		return ReadObject(r, OutputJSONFormat, out)
+		return ReadObject(r, JSONFormat, out)
 	default:
 		return fmt.Errorf("Can't deduce file format: %s", path)
 	}

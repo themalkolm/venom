@@ -11,17 +11,17 @@ import (
 	"strings"
 )
 
-type OutputFormat string
+type Format string
 
 var (
-	OutputJSONFormat = OutputFormat("json")
-	OutputYAMLFormat = OutputFormat("yaml")
-	OutputFormats    = []OutputFormat{
-		OutputJSONFormat,
-		OutputYAMLFormat,
+	JSONFormat    = Format("json")
+	YAMLFormat    = Format("yaml")
+	OutputFormats = []Format{
+		JSONFormat,
+		YAMLFormat,
 	}
 
-	DefaultOutputFormat = OutputYAMLFormat
+	DefaultFormat = YAMLFormat
 )
 
 func writerFor(path string) (io.WriteCloser, error) {
@@ -33,16 +33,16 @@ func writerFor(path string) (io.WriteCloser, error) {
 	}
 }
 
-func WriteObject(in interface{}, format OutputFormat, w io.Writer) error {
+func WriteObject(in interface{}, format Format, w io.Writer) error {
 	switch format {
-	case OutputYAMLFormat:
+	case YAMLFormat:
 		b, err := yaml.Marshal(in)
 		if err != nil {
 			return err
 		}
 		_, err = w.Write(b)
 		return err
-	case OutputJSONFormat:
+	case JSONFormat:
 		var b bytes.Buffer
 
 		e := json.NewEncoder(&b)
@@ -68,11 +68,11 @@ func WriteObjectTo(in interface{}, path string) error {
 
 	switch {
 	case path == "-":
-		return WriteObject(in, DefaultOutputFormat, w)
+		return WriteObject(in, DefaultFormat, w)
 	case strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml"):
-		return WriteObject(in, OutputYAMLFormat, w)
+		return WriteObject(in, YAMLFormat, w)
 	case strings.HasSuffix(path, ".json"):
-		return WriteObject(in, OutputJSONFormat, w)
+		return WriteObject(in, JSONFormat, w)
 	default:
 		return fmt.Errorf("Can't deduce file format: %s", path)
 	}
