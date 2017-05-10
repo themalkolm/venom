@@ -45,7 +45,7 @@ func ReadObjectFrom(path string, out interface{}) error {
 
 	switch {
 	case path == "-":
-		return ReadObject(r, DefaultFormat, out)
+		return ReadObject(r, DefaultInputFormat, out)
 	case strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml"):
 		return ReadObject(r, YAMLFormat, out)
 	case strings.HasSuffix(path, ".json"):

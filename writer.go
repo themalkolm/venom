@@ -14,14 +14,20 @@ import (
 type Format string
 
 var (
-	JSONFormat    = Format("json")
-	YAMLFormat    = Format("yaml")
+	JSONFormat   = Format("json")
+	YAMLFormat   = Format("yaml")
+
+	InputFormats = []Format{
+		JSONFormat,
+		YAMLFormat,
+	}
 	OutputFormats = []Format{
 		JSONFormat,
 		YAMLFormat,
 	}
 
-	DefaultFormat = YAMLFormat
+	DefaultInputFormat  = YAMLFormat
+	DefaultOutputFormat = YAMLFormat
 )
 
 func writerFor(path string) (io.WriteCloser, error) {
@@ -68,7 +74,7 @@ func WriteObjectTo(in interface{}, path string) error {
 
 	switch {
 	case path == "":
-		return WriteObject(in, DefaultFormat, w)
+		return WriteObject(in, DefaultOutputFormat, w)
 	case strings.HasSuffix(path, ".yaml") || strings.HasSuffix(path, ".yml"):
 		return WriteObject(in, YAMLFormat, w)
 	case strings.HasSuffix(path, ".json"):
