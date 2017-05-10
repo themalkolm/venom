@@ -28,7 +28,7 @@ type logConfig struct {
 }
 
 func initLogFlags(flags *pflag.FlagSet) error {
-	flags.String("log-level", "info", fmt.Sprintf("Log level [%s]", strings.Join(LogLevels, "|")))
+	flags.StringP("log-level", "l", "info", fmt.Sprintf("Log level [%s]", strings.Join(LogLevels, "|")))
 	flags.String("log-format", "text", fmt.Sprintf("Log format [%s]", strings.Join(LogFormats, "|")))
 	return nil
 }
