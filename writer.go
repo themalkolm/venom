@@ -16,6 +16,7 @@ type Format string
 var (
 	JSONFormat   = Format("json")
 	YAMLFormat   = Format("yaml")
+	RawFormat    = Format("raw")
 
 	InputFormats = []Format{
 		JSONFormat,
@@ -24,6 +25,7 @@ var (
 	OutputFormats = []Format{
 		JSONFormat,
 		YAMLFormat,
+		RawFormat,
 	}
 
 	DefaultInputFormat  = YAMLFormat
@@ -41,6 +43,13 @@ func writerFor(path string) (io.WriteCloser, error) {
 
 func WriteObject(in interface{}, format Format, w io.Writer) error {
 	switch format {
+	case RawFormat:
+		b, ok := in.([]byte)
+		if !ok {
+			return fmt.Errorf("Can't cast input to []byte: %s", in)
+		}
+		_, err := w.Write(b)
+		return err
 	case YAMLFormat:
 		b, err := yaml.Marshal(in)
 		if err != nil {
