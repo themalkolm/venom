@@ -14,9 +14,9 @@ import (
 type Format string
 
 var (
-	JSONFormat   = Format("json")
-	YAMLFormat   = Format("yaml")
-	RawFormat    = Format("raw")
+	JSONFormat = Format("json")
+	YAMLFormat = Format("yaml")
+	RawFormat  = Format("raw")
 
 	InputFormats = []Format{
 		JSONFormat,
