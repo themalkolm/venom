@@ -15,7 +15,7 @@ var (
 	//
 	// Hide flags that are used to generate result configuration itself.
 	//
-	hideFlags = []string{"print-config", "print-env", "env", "env-file"}
+	hideFlags = []string{"print-config", "print-env", "env", "env-file", "env-prefix"}
 )
 
 //
