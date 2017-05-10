@@ -44,12 +44,16 @@ func writerFor(path string) (io.WriteCloser, error) {
 func WriteObject(in interface{}, format Format, w io.Writer) error {
 	switch format {
 	case RawFormat:
-		b, ok := in.([]byte)
-		if !ok {
-			return fmt.Errorf("Can't cast input to []byte: %s", in)
+		switch t := in.(type) {
+		case []byte:
+			_, err := w.Write(t)
+			return err
+		case io.Reader:
+			_, err := io.Copy(w, t)
+			return err
+		default:
+			return fmt.Errorf("Can't cast input to []byte or io.Reader: %s", in)
 		}
-		_, err := w.Write(b)
-		return err
 	case YAMLFormat:
 		b, err := yaml.Marshal(in)
 		if err != nil {
