@@ -52,7 +52,7 @@ func WriteObject(in interface{}, format Format, w io.Writer) error {
 			_, err := io.Copy(w, t)
 			return err
 		default:
-			return fmt.Errorf("Can't cast input to []byte or io.Reader: %s", in)
+			return fmt.Errorf("Can't cast input to []byte or io.Reader: %#v", in)
 		}
 	case YAMLFormat:
 		b, err := yaml.Marshal(in)
