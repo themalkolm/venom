@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v2"
-	"strings"
 )
 
 type Format string
