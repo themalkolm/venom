@@ -45,6 +45,9 @@ func WriteObject(in interface{}, format Format, w io.Writer) error {
 	switch format {
 	case RawFormat:
 		switch t := in.(type) {
+		case string:
+			_, err := w.Write([]byte(t))
+			return err
 		case []byte:
 			_, err := w.Write(t)
 			return err
