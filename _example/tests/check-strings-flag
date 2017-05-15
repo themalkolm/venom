@@ -19,3 +19,9 @@ expect {
     default { puts "FAIL"; exit 1 }
     "strings:*- foo*- bar"
 }
+
+spawn ./bin/example --strings foo,bar --strings goo
+expect {
+    default { puts "FAIL"; exit 1 }
+    "strings:*- foo*- bar*- goo"
+}
