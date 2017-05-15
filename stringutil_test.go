@@ -6,27 +6,51 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParseEmpty(t *testing.T) {
-	m, err := parseMapStringString("", ",", "=")
-	assert.Nil(t, err)
-	assert.Equal(t, m, map[string]string{})
+type setup struct {
+	s string
+	m map[string]string
 }
 
-func TestParseSingle(t *testing.T) {
-	m, err := parseMapStringString("foo=bar", ",", "=")
-	assert.Nil(t, err)
-	assert.Equal(t, m, map[string]string{
-		"foo": "bar",
-	})
+var (
+	table = map[string]setup{
+		"empty": {
+			s: "",
+			m: map[string]string{},
+		},
+		"single": {
+			s: "foo=bar",
+			m: map[string]string{
+				"foo": "bar",
+			},
+		},
+		"multiple": {
+			s: "foo=bar,goo=moo",
+			m: map[string]string{
+				"foo": "bar",
+				"goo": "moo",
+			},
+		},
+	}
+)
+
+func TestParse(t *testing.T) {
+	for name, x := range table {
+		t.Run(name, func(t *testing.T) {
+			m, err := parseMapStringString(x.s, ",", "=")
+			assert.Nil(t, err)
+			assert.Equal(t, m, x.m)
+		})
+	}
 }
 
-func TestParseMultiple(t *testing.T) {
-	m, err := parseMapStringString("foo=bar,moo=goo", ",", "=")
-	assert.Nil(t, err)
-	assert.Equal(t, m, map[string]string{
-		"foo": "bar",
-		"moo": "goo",
-	})
+func TestSerialize(t *testing.T) {
+	for name, x := range table {
+		t.Run(name, func(t *testing.T) {
+			s, err := serializeMapStringString(x.m, ",", "=")
+			assert.Nil(t, err)
+			assert.Equal(t, s, x.s)
+		})
+	}
 }
 
 func TestFailNoSep(t *testing.T) {
