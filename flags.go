@@ -13,6 +13,8 @@
 package venom
 
 import (
+	"fmt"
+	"strings"
 	"time"
 )
 
@@ -66,4 +68,45 @@ func (v *durationValue) Type() string {
 
 func (v *durationValue) String() string {
 	return time.Duration(*v).String()
+}
+
+//
+// map[string]string
+//
+type mapStringStringValue map[string]string
+
+func newMapStringStringValue(val map[string]string, p map[string]string) mapStringStringValue {
+	for k := range val {
+		p[k] = val[k]
+	}
+	return mapStringStringValue(p)
+}
+
+func (v mapStringStringValue) Set(s string) error {
+	val, err := parseMapStringString(s, ",", "=")
+	if err != nil {
+		return err
+	}
+
+	// clear
+	for k := range v {
+		delete(v, k)
+	}
+	// set
+	for k := range val {
+		v[k] = val[k]
+	}
+	return nil
+}
+
+func (v mapStringStringValue) Type() string {
+	return "map[string]string"
+}
+
+func (v mapStringStringValue) String() string {
+	parts := make([]string, 0, len(v))
+	for k := range v {
+		parts = append(parts, fmt.Sprintf("%s=%s", k, v[k]))
+	}
+	return strings.Join(parts, ",")
 }
