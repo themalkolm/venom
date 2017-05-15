@@ -102,6 +102,9 @@ func (v *mapStringStringValue) Type() string {
 }
 
 func (v *mapStringStringValue) String() string {
-	str, _ := serializeMapStringString(*v.value, ",", "=")
+	str, err := serializeMapStringString(*v.value, ",", "=")
+	if err != nil {
+		panic(err)
+	}
 	return "{" + str + "}"
 }
