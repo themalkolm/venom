@@ -129,3 +129,14 @@ func stringToUintSliceHookFunc(sep string) mapstructure.DecodeHookFunc {
 		return vals, nil
 	}
 }
+
+func stringToMapStringStringHookFunc(sep, kvsep string) mapstructure.DecodeHookFunc {
+	return func(f reflect.Type, t reflect.Type, data interface{}) (interface{}, error) {
+		if f.Kind() != reflect.String || (t != reflect.TypeOf(map[string]string{})) {
+			return data, nil
+		}
+
+		raw := data.(string)
+		return parseMapStringString(raw, sep, kvsep)
+	}
+}

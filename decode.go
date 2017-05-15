@@ -44,6 +44,7 @@ func defaultDecoderConfig(output interface{}) *mapstructure.DecoderConfig {
 			stringToUintSliceHookFunc(","),
 			stringToTimeDurationHookFunc(),
 			stringToTimeHookFunc(time.RFC3339),
+			stringToMapStringStringHookFunc(",", "="),
 		),
 	}
 }
