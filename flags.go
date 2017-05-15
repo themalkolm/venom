@@ -13,8 +13,6 @@
 package venom
 
 import (
-	"fmt"
-	"strings"
 	"time"
 )
 
@@ -70,43 +68,40 @@ func (v *durationValue) String() string {
 	return time.Duration(*v).String()
 }
 
-//
-// map[string]string
-//
-type mapStringStringValue map[string]string
-
-func newMapStringStringValue(val map[string]string, p map[string]string) mapStringStringValue {
-	for k := range val {
-		p[k] = val[k]
-	}
-	return mapStringStringValue(p)
+type mapStringStringValue struct {
+	value   *map[string]string
+	changed bool
 }
 
-func (v mapStringStringValue) Set(s string) error {
+func newMapStringStringValue(val map[string]string, p *map[string]string) *mapStringStringValue {
+	mssv := new(mapStringStringValue)
+	mssv.value = p
+	*mssv.value = val
+	return mssv
+}
+
+func (v *mapStringStringValue) Set(s string) error {
 	val, err := parseMapStringString(s, ",", "=")
 	if err != nil {
 		return err
 	}
 
-	// clear
-	for k := range v {
-		delete(v, k)
+	if !v.changed {
+		*v.value = val
+	} else {
+		for k := range val {
+			(*v.value)[k] = val[k]
+		}
 	}
-	// set
-	for k := range val {
-		v[k] = val[k]
-	}
+	v.changed = true
 	return nil
 }
 
-func (v mapStringStringValue) Type() string {
-	return "map[string]string"
+func (v *mapStringStringValue) Type() string {
+	return "stringMap"
 }
 
-func (v mapStringStringValue) String() string {
-	parts := make([]string, 0, len(v))
-	for k := range v {
-		parts = append(parts, fmt.Sprintf("%s=%s", k, v[k]))
-	}
-	return strings.Join(parts, ",")
+func (v *mapStringStringValue) String() string {
+	str, _ := serializeMapStringString(*v.value, ",", "=")
+	return "{" + str + "}"
 }

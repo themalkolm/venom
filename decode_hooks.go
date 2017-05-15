@@ -137,6 +137,8 @@ func stringToMapStringStringHookFunc(sep, kvsep string) mapstructure.DecodeHookF
 		}
 
 		raw := data.(string)
+		raw = strings.TrimPrefix(raw, "{")
+		raw = strings.TrimSuffix(raw, "}")
 		return parseMapStringString(raw, sep, kvsep)
 	}
 }
