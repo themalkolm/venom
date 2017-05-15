@@ -28,6 +28,7 @@ expecttest: $(TESTS)
 .PHONY: gotest
 gotest:
 	gb test -v ...
+	gb test -v github.com/themalkolm/venom
 
 .PHONY: test
 test: gotest expecttest

@@ -311,6 +311,15 @@ func (a flagsFactory) createFlag(fi flagInfo, fieldValue reflect.Value, fieldTyp
 		value := newDurationValue(val, p)
 		flags.VarP(value, name, shorthand, usage)
 		return &flags, nil
+	case reflect.TypeOf(map[string]string{}):
+		val := fieldValue.Interface().(map[string]string)
+
+		// map is a pointer itself, so use it as is
+		p := map[string]string{}
+
+		value := newMapStringStringValue(val, p)
+		flags.VarP(value, name, shorthand, usage)
+		return &flags, nil
 	}
 
 	switch fieldType.Kind() {
