@@ -1,0 +1,28 @@
+#!/usr/bin/env expect
+
+set timeout 1
+
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "stringsmap: {}"
+}
+
+spawn ./bin/example --strings-map yum=num
+expect {
+    default { puts "FAIL"; exit 1 }
+    "stringsmap:*  yum: num"
+}
+
+spawn ./bin/example --strings-map yum=num,gum=tum
+expect {
+    default { puts "FAIL"; exit 1 }
+    "stringsmap:*  gum: tum*  yum: num"
+}
+
+set ::env(EXAMPLE_STRINGS_MAP) yum=num
+spawn ./bin/example
+expect {
+    default { puts "FAIL"; exit 1 }
+    "stringsmap:*  yum: num"
+}
