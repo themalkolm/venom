@@ -26,3 +26,9 @@ expect {
     default { puts "FAIL"; exit 1 }
     "stringsmap:*  yum: num"
 }
+
+spawn ./bin/example --strings-map yum=num --strings-map gum=tum
+expect {
+    default { puts "FAIL"; exit 1 }
+    "stringsmap:*  gum: tum*  yum: num"
+}
