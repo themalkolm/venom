@@ -68,6 +68,9 @@ func (v *durationValue) String() string {
 	return time.Duration(*v).String()
 }
 
+//
+// map[string]string
+//
 type mapStringStringValue struct {
 	value   *map[string]string
 	changed bool
