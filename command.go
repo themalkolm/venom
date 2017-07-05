@@ -54,10 +54,10 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		return err
 	}
 
-	// I have no idea if PreRunE is the right hook to use here.
-	if cmd.PreRunE != nil {
-		preRunE := cmd.PreRunE
-		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
+	// I have no idea if PersistentPreRunE is the right hook to use here.
+	if cmd.PersistentPreRunE != nil {
+		preRunE := cmd.PersistentPreRunE
+		cmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
 			err := preRun(flags, v)
 			if err != nil {
 				return err
@@ -66,7 +66,7 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 			return preRunE(cmd, args)
 		}
 	} else {
-		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
+		cmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
 			return preRun(flags, v)
 		}
 	}
