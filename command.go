@@ -58,12 +58,12 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 	if cmd.PreRunE != nil {
 		preRunE := cmd.PreRunE
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-			err := preRunE(cmd, args)
+			err := preRun(flags, v)
 			if err != nil {
 				return err
 			}
 
-			return preRun(flags, v)
+			return preRunE(cmd, args)
 		}
 	} else {
 		cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
