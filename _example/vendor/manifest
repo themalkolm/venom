@@ -182,6 +182,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "gopkg.in/robfig/cron.v2",
+			"repository": "https://gopkg.in/robfig/cron.v2",
+			"revision": "be2e0b0deed5a68ffee390b4583a13aff8321535",
+			"branch": "v2"
+		},
+		{
 			"importpath": "gopkg.in/yaml.v2",
 			"repository": "https://gopkg.in/yaml.v2",
 			"revision": "a3f3340b5840cee44f372bddb5880fcbc419b46a",
