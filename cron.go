@@ -15,11 +15,13 @@ import (
 )
 
 type cronConfig struct {
-	Schedule string `mapstructure:"schedule"`
+	Schedule     string `mapstructure:"schedule"`
+	ScheduleHttp string `mapstructure:"schedule-http"`
 }
 
 func initCronFlags(flags *pflag.FlagSet) error {
 	flags.String("schedule", "", "Schedule spec to schedule command for (e.g. every 1s = */1 * * * * *)")
+	flags.String("schedule-http", "", "Address to run scheduler controls")
 	return nil
 }
 
@@ -66,6 +68,10 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			return err
 		}
 		schedule.Start()
+
+		if cfg.ScheduleHttp != "" {
+			go ListenAndServe(cfg.ScheduleHttp, schedule)
+		}
 
 		for {
 			select {
