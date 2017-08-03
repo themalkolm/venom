@@ -1,4 +1,0 @@
-package: github.com/themalkolm/venom/example
-import:
-- package: github.com/spf13/cobra
-  version: 92ea23a837e66f46ac9e7d04fa826602b7b0a42d
