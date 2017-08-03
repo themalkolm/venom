@@ -71,5 +71,9 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		}
 	}
 
+	if cmd.RunE != nil {
+		cmd.RunE = CronRunE(cmd.RunE, v)
+	}
+
 	return nil
 }

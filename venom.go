@@ -34,6 +34,11 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 		return err
 	}
 
+	err = initCronFlags(flags)
+	if err != nil {
+		return err
+	}
+
 	// Bind flags and configuration keys 1-to-1
 	err = v.BindPFlags(flags)
 	if err != nil {
