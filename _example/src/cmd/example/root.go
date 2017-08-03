@@ -95,8 +95,6 @@ func runE(cfg *Config) error {
 	logrus.Warn("Logging using [warning] level")
 	logrus.Debug("Logging using [debug] level")
 	logrus.Error("Logging using [error] level")
-	logrus.Fatal("Logging using [fatal] level")
-	logrus.Panic("Logging using [panic] level")
 
 	return nil
 }
