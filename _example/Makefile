@@ -1,9 +1,12 @@
+PATH  := $(PATH):$(CURDIR)/vendor/bin:$(CURDIR)/bin
+SHELL := /bin/bash
+
 TESTS := $(wildcard tests/*)
 
 all: build test
 
 gb:
-	@which gb 2>/dev/null || go get github.com/constabulary/gb/...
+	@which gb 2>/dev/null || GOPATH=$(CURDIR)/vendor go get github.com/constabulary/gb/...
 
 fmt:
 	@gofmt -l -s -w -- src
