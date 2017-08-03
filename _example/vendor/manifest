@@ -8,6 +8,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/constabulary/gb",
+			"repository": "https://github.com/constabulary/gb",
+			"revision": "f11784c79acf8d0c0a516774585aed66dc0dc439",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/cpuguy83/go-md2man/md2man",
 			"repository": "https://github.com/cpuguy83/go-md2man",
 			"revision": "a65d4d2de4d5f7c74868dfa9b202a3c8be315aaa",
@@ -67,6 +73,12 @@
 			"importpath": "github.com/pelletier/go-toml",
 			"repository": "https://github.com/pelletier/go-toml",
 			"revision": "13d49d4606eb801b8f01ae542b4afc4c6ee3d84a",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/pkg/errors",
+			"repository": "https://github.com/pkg/errors",
+			"revision": "c605e284fe17294bda444b34710735b29d1a9d90",
 			"branch": "master"
 		},
 		{
