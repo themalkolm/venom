@@ -61,6 +61,9 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 				logrus.WithError(err).Errorf("Error")
 				if exitOnError {
 					schedule.Stop()
+					for _, e := range schedule.Entries() {
+						schedule.Remove(e.ID)
+					}
 				}
 			}
 		})
@@ -94,6 +97,9 @@ func ListenAndServe(addr string, c *cron.Cron) error {
 	mux.HandleFunc("/quitquitquit", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "OK\n")
 		c.Stop()
+		for _, e := range c.Entries() {
+			c.Remove(e.ID)
+		}
 	})
 	mux.HandleFunc("/abortabortabort", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "OK\n")
