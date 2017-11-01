@@ -29,6 +29,10 @@ func initCronFlags(flags *pflag.FlagSet) error {
 
 type Func func(cmd *cobra.Command, args []string) error
 
+type GetCronFunc func() *cron.Cron
+
+var getCron GetCronFunc
+
 func CronRunE(runE Func, v *viper.Viper) Func {
 	return func(cmd *cobra.Command, args []string) error {
 		var cfg cronConfig
@@ -49,7 +53,7 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 		// we are not killed during the initial run if --schedule-after-run is set.
 		//
 		if cfg.ScheduleHttp != "" {
-			go ListenAndServe(cfg.ScheduleHttp, schedule)
+			go ListenAndServe(cfg.ScheduleHttp)
 		}
 
 		if cfg.ScheduleAfterRun {
@@ -68,6 +72,9 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 
 		jobs := sync.WaitGroup{}
 		schedule := cron.New()
+		getCron = func() *cron.Cron {
+			return schedule
+		}
 
 		_, err = schedule.AddFunc(spec, func() {
 			jobs.Add(1)
@@ -102,19 +109,31 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 	}
 }
 
-func ListenAndServe(addr string, c *cron.Cron) error {
+func QuitQuitQuit() {
+	if getCron != nil {
+		c := getCron()
+		c.Stop()
+		for _, e := range c.Entries() {
+			c.Remove(e.ID)
+		}
+	}
+}
+
+func AbortAbortAbort() {
+	QuitQuitQuit()
+}
+
+func ListenAndServe(addr string) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "OK\n")
 	})
 	mux.HandleFunc("/quitquitquit", func(w http.ResponseWriter, req *http.Request) {
+		QuitQuitQuit()
 		fmt.Fprintf(w, "OK\n")
-		c.Stop()
-		for _, e := range c.Entries() {
-			c.Remove(e.ID)
-		}
 	})
 	mux.HandleFunc("/abortabortabort", func(w http.ResponseWriter, req *http.Request) {
+		AbortAbortAbort()
 		fmt.Fprintf(w, "OK\n")
 	})
 	return http.ListenAndServe(addr, mux)
