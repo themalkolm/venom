@@ -43,6 +43,14 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 		if cfg.Schedule == "" {
 			return runE(cmd, args)
 		}
+		
+		//
+		// Start serving health checks as soon as possible, this is to make sure
+		// we are not killed during the initial run if --schedule-after-run is set.
+		//
+		if cfg.ScheduleHttp != "" {
+			go ListenAndServe(cfg.ScheduleHttp, schedule)
+		}		
 
 		if cfg.ScheduleAfterRun {
 			err := runE(cmd, args)
@@ -80,10 +88,6 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			return err
 		}
 		schedule.Start()
-
-		if cfg.ScheduleHttp != "" {
-			go ListenAndServe(cfg.ScheduleHttp, schedule)
-		}
 
 		for {
 			select {
