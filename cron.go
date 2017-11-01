@@ -31,6 +31,7 @@ type Func func(cmd *cobra.Command, args []string) error
 
 type GetCronFunc func() *cron.Cron
 
+// TODO(akrasnukhin) This is racy
 var getCron GetCronFunc
 
 func CronRunE(runE Func, v *viper.Viper) Func {
