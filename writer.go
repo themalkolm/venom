@@ -84,3 +84,17 @@ func WriteObjectTo(in interface{}, path string) error {
 		return fmt.Errorf("Can't deduce file format: %s", path)
 	}
 }
+
+//
+// Simple wrapper around any object that could be used in logrus e.g.
+//
+// logrus.WithField("plan", venom.PrettyField(plan)).Info("Here is the plan")
+//
+func PrettyField(in interface{}, format venom.Format) string {
+	var b bytes.Buffer
+	err := venom.WriteObject(in, format, &b)
+	if err != nil {
+		return fmt.Sprintf("failed to pretty print: %s", err)
+	}
+	return b.String()
+}
