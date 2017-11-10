@@ -90,9 +90,9 @@ func WriteObjectTo(in interface{}, path string) error {
 //
 // logrus.WithField("plan", venom.PrettyField(plan)).Info("Here is the plan")
 //
-func PrettyField(in interface{}, format venom.Format) string {
+func PrettyField(in interface{}, format Format) string {
 	var b bytes.Buffer
-	err := venom.WriteObject(in, format, &b)
+	err := WriteObject(in, format, &b)
 	if err != nil {
 		return fmt.Sprintf("failed to pretty print: %s", err)
 	}
