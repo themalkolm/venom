@@ -58,7 +58,8 @@ func WriteObject(in interface{}, format Format, w io.Writer) error {
 		if err != nil {
 			return err
 		}
-		_, err = io.Copy(w, &b)
+
+		_, err = w.Write(b.Bytes())
 		return err
 	default:
 		return fmt.Errorf("Unrecognized format: %s", format)
