@@ -12,6 +12,8 @@ import (
 var (
 	LogLevels  = []string{}
 	LogFormats = []string{"text", "json"}
+
+	DefaultTimestampFormat = "2006-01-02 15:04:05.000"
 )
 
 func init() {
@@ -49,7 +51,7 @@ func readLog(v *viper.Viper) error {
 	case "text":
 		f := &logrus.TextFormatter{}
 		f.FullTimestamp = true
-		f.TimestampFormat = logrus.DefaultTimestampFormat
+		f.TimestampFormat = DefaultTimestampFormat
 		logrus.SetFormatter(f)
 	default:
 		return fmt.Errorf("Invalid log format: %s", cfg.LogFormatter)
