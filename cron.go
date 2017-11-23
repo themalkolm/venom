@@ -76,6 +76,9 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			spec = spec[1:]
 		}
 
+		//
+		// WaitGroup allows us to wait for all jobs to complete on exit.
+		//
 		jobs := sync.WaitGroup{}
 		schedule := cron.New()
 		getCron = func() *cron.Cron {
