@@ -86,17 +86,23 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			return schedule
 		}
 
-		var jobsCounter int32 = 0
+		var jobStartTime int64 = 0
 
 		_, err = schedule.AddFunc(spec, func() {
 			//
 			// This prevents us from running this function twice.
 			//
-			if !atomic.CompareAndSwapInt32(&jobsCounter, 0, 1) {
-				logrus.Info("Still running, skipping.")
+			now := time.Now()
+			if !atomic.CompareAndSwapInt64(&jobStartTime, 0, now.UnixNano()) {
+				startTime := time.Unix(0, atomic.LoadInt64(&jobStartTime))
+				if now.After(startTime) { // required if go < 1.9 is used, see https://golang.org/doc/go1.9#monotonic-time
+					logrus.WithField("duration", now.Sub(startTime)).Info("Skipping as it is still running.")
+				} else {
+					logrus.Info("Skipping as it is still running.")
+				}
 				return
 			}
-			defer atomic.StoreInt32(&jobsCounter, 0)
+			defer atomic.StoreInt64(&jobStartTime, 0)
 
 			//
 			// This allows us to wait for the function return on exit.
