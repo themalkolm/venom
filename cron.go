@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -85,7 +86,21 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			return schedule
 		}
 
+		var jobsCounter int32 = 0
+
 		_, err = schedule.AddFunc(spec, func() {
+			//
+			// This prevents us from running this function twice.
+			//
+			if !atomic.CompareAndSwapInt32(&jobsCounter, 0, 1) {
+				logrus.Info("Still running, skipping.")
+				return
+			}
+			defer atomic.StoreInt32(&jobsCounter, 0)
+
+			//
+			// This allows us to wait for the function return on exit.
+			//
 			jobs.Add(1)
 			defer jobs.Done()
 
