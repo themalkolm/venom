@@ -64,6 +64,11 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			}
 		}
 
+		//
+		// If cron spec starts with "-" we don't exit on errors. Very neat when you schedule
+		// a command that periodically fails but you don't halt the whole process i.e. some kind
+		// of poor man's command manager.
+		//
 		spec := cfg.Schedule
 		exitOnError := true
 		if strings.HasPrefix(spec, "-") {
