@@ -12,6 +12,7 @@ import (
 //
 type Config interface {
 	Valid() error
+	Default() error
 }
 
 //
