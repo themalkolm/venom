@@ -77,3 +77,13 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 
 	return nil
 }
+
+//
+// Version of TwelveFactorCmd that parses flags from the provided defaults.
+//
+func AutoFlagsTwelveFactorCmd(name string, cmd *cobra.Command, defaults interface{}, viperMaybe ...*viper.Viper) error {
+	flags := cmd.PersistentFlags()
+	flags.AddFlagSet(MustDefineFlags(defaults))
+
+	return TwelveFactorCmd(name, cmd, flags, viperMaybe...)
+}
