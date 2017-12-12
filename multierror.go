@@ -7,7 +7,16 @@ import (
 )
 
 func isNil(e error) bool {
-	return e == nil || reflect.ValueOf(e).IsNil()
+	if e == nil {
+		return true
+	}
+
+	// structs can't be nil
+	if reflect.TypeOf(e).Kind() == reflect.Struct {
+		return false
+	}
+
+	return reflect.ValueOf(e).IsNil()
 }
 
 func anyNonNil(errs []error) bool {
