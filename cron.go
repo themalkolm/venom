@@ -32,19 +32,19 @@ func initCronMetrics() *cronMetrics {
 	metrics := &cronMetrics{
 		Errors: prometheus.NewCounter(prometheus.CounterOpts{
 			Namespace: "venom",
-			Subsystem: "schedule",
+			Subsystem: "cron",
 			Name:      "errors_total",
 			Help:      "Number of times execution has failed.",
 		}),
 		Skips: prometheus.NewCounter(prometheus.CounterOpts{
 			Namespace: "venom",
-			Subsystem: "schedule",
+			Subsystem: "cron",
 			Name:      "skips_total",
 			Help:      "Number of times execution was skipped.",
 		}),
 		Runs: prometheus.NewCounter(prometheus.CounterOpts{
 			Namespace: "venom",
-			Subsystem: "schedule",
+			Subsystem: "cron",
 			Name:      "runs_total",
 			Help:      "Number of times execution was attempted.",
 		}),
