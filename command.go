@@ -71,6 +71,8 @@ func TwelveFactorCmd(name string, cmd *cobra.Command, flags *pflag.FlagSet, vipe
 		}
 	}
 
+	go ListenAndServeMetrics(name, v)
+
 	if cmd.RunE != nil {
 		cmd.RunE = CronRunE(cmd.RunE, v)
 	}

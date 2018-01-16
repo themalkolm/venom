@@ -34,6 +34,11 @@ func TwelveFactor(name string, flags *pflag.FlagSet, viperMaybe ...*viper.Viper)
 		return err
 	}
 
+	err = initMetricsFlags(flags)
+	if err != nil {
+		return err
+	}
+
 	err = initCronFlags(flags)
 	if err != nil {
 		return err
