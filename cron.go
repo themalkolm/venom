@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -19,6 +20,41 @@ type cronConfig struct {
 	Schedule         string `mapstructure:"schedule"`
 	ScheduleAfterRun bool   `mapstructure:"schedule-after-run"`
 	ScheduleHttp     string `mapstructure:"schedule-http"`
+}
+
+type cronMetrics struct {
+	Runs   prometheus.Counter
+	Errors prometheus.Counter
+	Skips  prometheus.Counter
+}
+
+func initCronMetrics() *cronMetrics {
+	metrics := &cronMetrics{
+		Errors: prometheus.NewCounter(prometheus.CounterOpts{
+			Namespace: "venom",
+			Subsystem: "schedule",
+			Name:      "errors_total",
+			Help:      "Number of times execution has failed.",
+		}),
+		Skips: prometheus.NewCounter(prometheus.CounterOpts{
+			Namespace: "venom",
+			Subsystem: "schedule",
+			Name:      "skips_total",
+			Help:      "Number of times execution was skipped.",
+		}),
+		Runs: prometheus.NewCounter(prometheus.CounterOpts{
+			Namespace: "venom",
+			Subsystem: "schedule",
+			Name:      "runs_total",
+			Help:      "Number of times execution was attempted.",
+		}),
+	}
+
+	prometheus.MustRegister(metrics.Errors)
+	prometheus.MustRegister(metrics.Skips)
+	prometheus.MustRegister(metrics.Runs)
+
+	return metrics
 }
 
 func initCronFlags(flags *pflag.FlagSet) error {
@@ -51,6 +87,11 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 		}
 
 		//
+		// Register all required metrics, must be run once only.
+		//
+		metrics := initCronMetrics()
+
+		//
 		// Start serving health checks as soon as possible, this is to make sure
 		// we are not killed during the initial run if --schedule-after-run is set.
 		//
@@ -59,8 +100,10 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 		}
 
 		if cfg.ScheduleAfterRun {
+			metrics.Runs.Add(1)
 			err := runE(cmd, args)
 			if err != nil {
+				metrics.Errors.Add(1)
 				return err
 			}
 		}
@@ -100,6 +143,7 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 				} else {
 					logrus.Info("Skipping as it is still running.")
 				}
+				metrics.Skips.Add(1)
 				return
 			}
 			defer atomic.StoreInt64(&jobStartTime, 0)
@@ -110,8 +154,10 @@ func CronRunE(runE Func, v *viper.Viper) Func {
 			jobs.Add(1)
 			defer jobs.Done()
 
+			metrics.Runs.Add(1)
 			err := runE(cmd, args)
 			if err != nil {
+				metrics.Errors.Add(1)
 				logrus.WithError(err).Errorf("Error")
 				if exitOnError {
 					schedule.Stop()
